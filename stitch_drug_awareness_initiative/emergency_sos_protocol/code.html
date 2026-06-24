@@ -1,0 +1,301 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Guardian Angel - Emergency SOS Protocol</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#6bfe9c",
+                        "primary-fixed-dim": "#ffb3b0",
+                        "surface": "#f7f9fc",
+                        "on-surface": "#191c1e",
+                        "surface-container-low": "#f2f4f7",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#006d37",
+                        "surface-container": "#eceef1",
+                        "inverse-primary": "#ffb3b0",
+                        "secondary-container": "#68abff",
+                        "surface-tint": "#b52330",
+                        "on-tertiary-fixed-variant": "#005228",
+                        "on-primary-fixed": "#410007",
+                        "secondary-fixed-dim": "#a4c9ff",
+                        "on-error": "#ffffff",
+                        "primary-container": "#ff5a5f",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#eff1f4",
+                        "on-secondary-fixed": "#001c39",
+                        "inverse-surface": "#2d3133",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#e0e3e6",
+                        "on-background": "#191c1e",
+                        "tertiary-container": "#00aa59",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#b52330",
+                        "outline-variant": "#e2bebc",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#004883",
+                        "on-surface-variant": "#5a403f",
+                        "primary-fixed": "#ffdad8",
+                        "background": "#f7f9fc",
+                        "secondary": "#0060ac",
+                        "on-primary-fixed-variant": "#92001b",
+                        "on-secondary-container": "#003e73",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#e6e8eb",
+                        "surface-dim": "#d8dadd",
+                        "outline": "#8e706f",
+                        "on-tertiary-fixed": "#00210c",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#61000e",
+                        "secondary-fixed": "#d4e3ff",
+                        "surface-variant": "#e0e3e6",
+                        "tertiary-fixed-dim": "#4ae183",
+                        "on-tertiary-container": "#003517",
+                        "surface-bright": "#f7f9fc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "24px",
+                        "container-padding": "20px",
+                        "stack-sm": "8px",
+                        "margin-page": "20px",
+                        "stack-md": "16px",
+                        "gutter-grid": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        .sos-pulse::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 9999px;
+            background-color: #ff5a5f;
+            z-index: -1;
+            animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+        }
+
+        .hold-progress {
+            transition: stroke-dashoffset 3s linear;
+            stroke-dasharray: 283;
+            stroke-dashoffset: 283;
+        }
+
+        .pressing .hold-progress {
+            stroke-dashoffset: 0;
+        }
+        
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col items-center justify-start overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-container-padding h-16 bg-surface dark:bg-surface-dim shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-fixed overflow-hidden flex items-center justify-center">
+<img class="w-full h-full object-cover" data-alt="A cute penguin mascot with a friendly smile, wearing a tiny red hero cape and holding a small heart shield. The penguin is illustrated in a modern, clean vector style with soft gradients, set against a pristine white background. The brand identity reflects safety and care." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwYQ8l-pp-8v_8Wzm_nCjsKjlVUZUpR_XW53zpF7tI6TpKH7VNRzO5Oj2XUFc9uhsCwsJ_BH3mu54Q5PPqMPszcl_h3S0XRCThfe8YZLD6DXPrlU2NT7D28l33soc8qm-nYn-jtIgsHdkghd2rHiucXVBIpRSSMJ5JqqEAu27mJmtAgyUoRLGswjX3pc0ruvz-4r7WhKDi18PTmLuYglTRlfHW6gxmJTuuYM2l6K7eWJYng3YuCOR2g-3pbnbNc2GcUOqI4krgdeQ">
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed-dim font-extrabold tracking-tight">Guardian Angel</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:opacity-80 transition-transform active:scale-95 duration-200">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+<main class="w-full max-w-md mx-auto pt-24 pb-32 px-margin-page flex flex-col gap-stack-lg">
+<!-- Hero Section: SOS Button -->
+<section class="flex flex-col items-center justify-center py-6">
+<div class="relative w-64 h-64 flex items-center justify-center">
+<!-- SVG Progress Ring -->
+<svg class="absolute w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
+<circle class="text-surface-container-highest stroke-current" cx="50" cy="50" fill="transparent" r="45" stroke-width="6"></circle>
+<circle class="text-primary stroke-current hold-progress" cx="50" cy="50" fill="transparent" id="progressCircle" r="45" stroke-linecap="round" stroke-width="6"></circle>
+</svg>
+<!-- SOS Button Main -->
+<button class="relative z-10 w-48 h-48 rounded-full bg-primary-container text-white flex flex-col items-center justify-center shadow-xl active:scale-95 transition-all duration-200 sos-pulse" id="sosBtn">
+<span class="font-headline-xl text-[48px] font-extrabold leading-none tracking-tighter">SOS</span>
+<p class="mt-2 font-label-md text-label-md uppercase tracking-wider opacity-90">Press &amp; Hold</p>
+</button>
+</div>
+<p class="mt-8 text-center text-on-surface-variant font-label-md">
+                Hold for 3 seconds to trigger emergency protocol
+            </p>
+</section>
+<!-- Mascot Status Message -->
+<div class="bg-surface-container-lowest p-stack-md rounded-xl border border-outline-variant shadow-[0_4px_15px_0_rgba(0,0,0,0.06)] flex items-center gap-4">
+<div class="w-12 h-12 flex-shrink-0 bg-primary-fixed rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close up of a friendly penguin mascot mascot with a supportive expression. The penguin is gesturing with its flipper towards a heart, symbolizing care and protection. Soft studio lighting and clean minimalist background colors consistent with corporate safety apps." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAp_auWknWV891RM8wKJ5NTNpmNrHNcXE1cqVBn0pucnQ8zyHrA63qAu50nyeHPTwi31_eDZhlQoGHG2k0BinQB_QWibpX1iMSPQxSzP7yHRSlbPyoNGfSOwLb3AgS9E5O-QoVLA7N7NpBcq7A62KWOUWDC834-3QtZ-j9sdaxONAMP_0DGBRy_Bec7XbhgNN9qQXyN3YTteUtQGYdifPXFIkZupMqhRVkpckvHs-ra2oUap2wQzh8ZfgYLa9oWZa6Ey076ZWGlx0">
+</div>
+<div>
+<p class="font-body-md font-semibold text-primary">"I'm here with you!"</p>
+<p class="text-label-sm text-on-surface-variant">Stay calm, your responders are being notified.</p>
+</div>
+</div>
+<!-- Emergency Protocols Selection -->
+<section class="flex flex-col gap-stack-md">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface px-1">Protocol Selection</h2>
+<div class="bento-grid">
+<!-- Overdose Response (Highlighted High Contrast) -->
+<button class="col-span-2 p-5 rounded-xl bg-primary border-2 border-primary-fixed flex flex-col justify-between items-start transition-all duration-200 active:scale-[0.98] shadow-lg">
+<div class="flex justify-between w-full items-start">
+<span class="material-symbols-outlined text-white text-[32px]" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+<span class="bg-white text-primary text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-tighter">Priority</span>
+</div>
+<div class="mt-4 text-left">
+<h3 class="text-white font-headline-lg-mobile text-headline-lg-mobile leading-tight">Overdose Response</h3>
+<p class="text-primary-fixed text-label-sm mt-1">Automatic naloxone kit location &amp; medical dispatch</p>
+</div>
+</button>
+<!-- Ambulance -->
+<button class="p-4 rounded-xl bg-surface-container-low border border-outline-variant flex flex-col gap-2 items-start hover:bg-surface-container transition-colors active:scale-95">
+<span class="material-symbols-outlined text-secondary text-[28px]">ambulance</span>
+<h3 class="font-label-md text-on-surface">Ambulance</h3>
+</button>
+<!-- Police -->
+<button class="p-4 rounded-xl bg-surface-container-low border border-outline-variant flex flex-col gap-2 items-start hover:bg-surface-container transition-colors active:scale-95">
+<span class="material-symbols-outlined text-secondary text-[28px]">local_police</span>
+<h3 class="font-label-md text-on-surface">Police</h3>
+</button>
+<!-- Fire -->
+<button class="p-4 rounded-xl bg-surface-container-low border border-outline-variant flex flex-col gap-2 items-start hover:bg-surface-container transition-colors active:scale-95">
+<span class="material-symbols-outlined text-error text-[28px]">fire_truck</span>
+<h3 class="font-label-md text-on-surface">Fire</h3>
+</button>
+<!-- Contacts -->
+<button class="p-4 rounded-xl bg-surface-container-low border border-outline-variant flex flex-col gap-2 items-start hover:bg-surface-container transition-colors active:scale-95">
+<span class="material-symbols-outlined text-tertiary text-[28px]">group</span>
+<h3 class="font-label-md text-on-surface">Family</h3>
+</button>
+</div>
+</section>
+<!-- Current Location Mini Map -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+<div class="h-32 w-full relative">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist digital map view showing a blue dot at the center representing current location. The streets are depicted in soft greys and whites, with subtle green areas for parks. High-contrast labels for nearby hospitals and safety hubs are visible, maintaining the corporate modern aesthetic." data-location="San Francisco" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbO6Nwz8TbOEWu6bg8gM7LxqB2T4EWmq4zgAtjHZZTLOkV-6BlrR2F-bmPWZzK4WGQPjaMmm-gJY3VyWXu5nBlFvWqxfNjJY0_szyRjSpxUhnRXhi-wurIy0NwW7AVCCJZgyzdKxAFUVVb-k8ycD2YT1ypEWL0edb9jt6Jgq5MfHLxZOfrH9ZDCQRwo5LdwTFTp3uk3w-JPX4r90k7_E9U6UUyncxw2AVIe7DcGYcaYzx3aLLf7sEYgSmuDl64EtAgG6I7m1F3ITs">
+<div class="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded-full flex items-center gap-1 shadow-sm">
+<div class="w-2 h-2 rounded-full bg-tertiary-container animate-pulse"></div>
+<span class="text-[10px] font-bold text-on-surface uppercase">Live Tracking</span>
+</div>
+</div>
+<div class="p-4 flex justify-between items-center">
+<div>
+<p class="text-label-sm text-on-surface-variant">Your current location</p>
+<p class="text-body-md font-semibold truncate max-w-[200px]">123 Safety Ave, Central District</p>
+</div>
+<button class="text-primary font-label-md px-3 py-1 rounded-full border border-primary hover:bg-primary/5 transition-colors">
+                    Share Link
+                </button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface-container-lowest dark:bg-surface-container-low shadow-[0_-4px_15px_0_rgba(0,0,0,0.06)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors px-4 py-1" href="{{DATA:SCREEN:SCREEN_11}}">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 transition-all duration-300 active:scale-90" href="{{DATA:SCREEN:SCREEN_10}}">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+<span class="font-label-sm text-label-sm mt-1">Alerts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors px-4 py-1" href="{{DATA:SCREEN:SCREEN_5}}">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-sm text-label-sm mt-1">Map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors px-4 py-1" href="{{DATA:SCREEN:SCREEN_12}}">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profile</span>
+</a>
+</nav>
+<script>
+        const sosBtn = document.getElementById('sosBtn');
+        const container = document.body;
+        let pressTimer;
+
+        sosBtn.addEventListener('mousedown', startPress);
+        sosBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            startPress();
+        });
+
+        sosBtn.addEventListener('mouseup', endPress);
+        sosBtn.addEventListener('touchend', endPress);
+        sosBtn.addEventListener('mouseleave', endPress);
+
+        function startPress() {
+            container.classList.add('pressing');
+            pressTimer = setTimeout(() => {
+                triggerSOS();
+            }, 3000);
+        }
+
+        function endPress() {
+            container.classList.remove('pressing');
+            clearTimeout(pressTimer);
+        }
+
+        function triggerSOS() {
+            // Visual feedback for activation
+            sosBtn.classList.add('bg-on-error-container', 'scale-110');
+            sosBtn.querySelector('p').innerText = "ALERT SENT";
+            
+            // Haptic vibration feedback if available
+            if ("vibrate" in navigator) {
+                navigator.vibrate([100, 30, 100, 30, 200]);
+            }
+            
+            // Simulate dispatch alert
+            setTimeout(() => {
+                alert("Emergency Services and Trusted Contacts have been notified. Stay exactly where you are.");
+            }, 100);
+        }
+    </script>
+
+
+</body></html>

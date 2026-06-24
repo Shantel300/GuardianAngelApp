@@ -1,0 +1,258 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Educational Hub - Guardian Angel</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      line-height: 1;
+    }
+    .shadow-soft {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    }
+    body {
+      background-color: #f7f9fc;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pulsate-glow {
+      animation: pulsate 2s infinite ease-in-out;
+    }
+    @keyframes pulsate {
+      0% { box-shadow: 0 0 0 0px rgba(255, 90, 95, 0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(255, 90, 95, 0); }
+      100% { box-shadow: 0 0 0 0px rgba(255, 90, 95, 0); }
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-bright": "#f7f9fc",
+            "on-tertiary": "#ffffff",
+            "on-primary-fixed-variant": "#92001b",
+            "surface-variant": "#e0e3e6",
+            "outline": "#8e706f",
+            "tertiary-fixed": "#6bfe9c",
+            "secondary-fixed-dim": "#a4c9ff",
+            "surface-container-highest": "#e0e3e6",
+            "on-tertiary-fixed-variant": "#005228",
+            "on-primary-container": "#61000e",
+            "on-primary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "on-tertiary-container": "#003517",
+            "surface-container": "#eceef1",
+            "surface-dim": "#d8dadd",
+            "inverse-surface": "#2d3133",
+            "on-secondary-container": "#003e73",
+            "outline-variant": "#e2bebc",
+            "secondary-fixed": "#d4e3ff",
+            "error": "#ba1a1a",
+            "on-primary-fixed": "#410007",
+            "on-surface": "#191c1e",
+            "surface-container-lowest": "#ffffff",
+            "surface": "#f7f9fc",
+            "primary-fixed": "#ffdad8",
+            "tertiary-container": "#00aa59",
+            "on-tertiary-fixed": "#00210c",
+            "on-error-container": "#93000a",
+            "on-secondary-fixed": "#001c39",
+            "background": "#f7f9fc",
+            "surface-container-low": "#f2f4f7",
+            "secondary-container": "#68abff",
+            "inverse-primary": "#ffb3b0",
+            "inverse-on-surface": "#eff1f4",
+            "on-background": "#191c1e",
+            "surface-tint": "#b52330",
+            "on-secondary-fixed-variant": "#004883",
+            "tertiary": "#006d37",
+            "tertiary-fixed-dim": "#4ae183",
+            "surface-container-high": "#e6e8eb",
+            "primary-container": "#ff5a5f",
+            "on-error": "#ffffff",
+            "error-container": "#ffdad6",
+            "secondary": "#0060ac",
+            "primary-fixed-dim": "#ffb3b0",
+            "on-surface-variant": "#5a403f",
+            "primary": "#b52330"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "stack-sm": "8px",
+            "stack-lg": "24px",
+            "gutter-grid": "16px",
+            "container-padding": "20px",
+            "stack-md": "16px",
+            "margin-page": "20px"
+          },
+          "fontFamily": {
+            "headline-xl": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+            "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+            "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+            "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+            "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "700"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-on-surface">
+<!-- Top Navigation Shell -->
+<header class="bg-surface dark:bg-on-surface shadow-sm sticky top-0 z-50 flex justify-between items-center w-full px-margin-page py-stack-sm h-16">
+<div class="flex items-center gap-3">
+<button class="active:scale-95 duration-200 hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed text-2xl">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed">Educational Hub</h1>
+</div>
+<div class="w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center overflow-hidden border-2 border-primary/10">
+<img class="w-full h-full object-cover" data-alt="A friendly penguin mascot illustration with large expressive eyes and a small orange beak, wearing a soft red scarf, depicted in a modern vector style with clean lines and soft gradients. The background is a minimalist light blue circle, reinforcing the brand's safe and supportive companion personality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmeM_Qun8gYZQKg49N6Q7vrfZsfl3nEgsMwXHoXc3ovKUPG6a4-gj8ZGhJ8dPRiUJEtWDZUL9PGswOuXN5xBCVWw-cVNnG553fJczV5KBi-NIkm1EL1DCdhZn7D6q3THJR-LAHyv-54t9-Tr7iBod5zczTTOx8gEU4OI6I4ChgZBqqUwO9t8h26b65QDp_c2fudaVpVRoo8tp6GS9mk0lEm_7wo7ov5cjeOwnMymrNJBFDD17BI9oPRH1hCqeQva9gFr5IpFZ-0zA">
+</div>
+</header>
+<main class="px-margin-page py-stack-lg flex flex-col gap-stack-lg pb-40">
+<!-- Hero Section -->
+<section class="bg-white rounded-[32px] p-container-padding shadow-soft flex items-center gap-4 relative overflow-hidden border border-[#E1E8F0]">
+<div class="w-24 flex-shrink-0">
+<img class="w-full h-auto" data-alt="A large, adorable penguin mascot sitting down with wings slightly spread in a welcoming gesture. The penguin has a vibrant red heart on its chest and bright, friendly eyes. It is illustrated in a soft corporate modern style with gentle highlights and shadows, placed against a very pale neutral background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv39jEe4SrZU9FkB6H19kwuuzT9N9nu-n0-WgV-16l9jeKBHCDeMKHU5FzYRGflSLk0rCtjFQm6bAVdtOO8gThqNvJORJQAqtJSiOX5N9q9t9Oaoy21kdwlAwe7aFE1f2jqPpyvmbYKlXftqHq8pDiyU-LBBG4_-g-9QqGe2tgCrssUEEJ43lK6jaqsxSte5okiJ2JwtG2of6zMgZlLGpKFE9TUDuAEleowLLPEd_Z0olL_AhHxkePEW4WZpCe9AztJXVUIkD2PT8">
+</div>
+<div class="flex-grow">
+<div class="relative bg-surface-container rounded-2xl p-3 mb-2">
+<p class="font-label-md text-on-surface leading-tight italic">
+            "I'm here to help you stay safe and informed."
+          </p>
+<!-- Speech bubble tail -->
+<div class="absolute -left-2 top-1/2 -translate-y-1/2 w-0 h-0 border-t-8 border-t-transparent border-r-8 border-r-surface-container border-b-8 border-b-transparent"></div>
+</div>
+<p class="text-label-sm text-on-surface-variant">Your Safety Companion</p>
+</div>
+</section>
+<!-- Content: Understanding Misuse -->
+<section>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile mb-stack-md text-on-surface">Understanding Health</h2>
+<div class="bg-white rounded-[24px] p-container-padding shadow-soft border border-outline-variant/30 flex flex-col gap-stack-md">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-3xl">medical_services</span>
+</div>
+<div>
+<h3 class="font-body-lg text-body-lg text-on-surface">Understanding Misuse</h3>
+<p class="text-label-sm text-on-surface-variant">Signs and awareness guide</p>
+</div>
+</div>
+<p class="text-body-md text-on-surface-variant leading-relaxed">
+          Substance misuse often manifests as subtle changes in behavior, physical health, or social patterns. Recognizing these signs early is crucial for providing timely support and intervention.
+        </p>
+<button class="self-start flex items-center gap-2 text-primary font-bold active:scale-95 transition-transform">
+<span class="text-label-md">Read the guide</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Content: Community Resources -->
+<section>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile mb-stack-md text-on-surface">Community Resources</h2>
+<div class="bg-white rounded-[24px] overflow-hidden shadow-soft border border-outline-variant/30">
+<div class="p-container-padding border-b border-outline-variant/20 flex items-center gap-4 hover:bg-surface-container-low transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded-xl bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">groups</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-label-md text-on-surface">Find a Support Group</h4>
+<p class="text-label-sm text-on-surface-variant">Connect with local communities</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+<div class="p-container-padding border-b border-outline-variant/20 flex items-center gap-4 hover:bg-surface-container-low transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-label-md text-on-surface">Talk to a Professional</h4>
+<p class="text-label-sm text-on-surface-variant">Confidential 1-on-1 counseling</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+<div class="p-container-padding flex items-center gap-4 hover:bg-surface-container-low transition-colors cursor-pointer group" onclick="window.location.href='{{DATA:SCREEN:SCREEN_10}}'">
+<div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">emergency</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-label-md text-on-surface">Emergency Helplines</h4>
+<p class="text-label-sm text-on-surface-variant">Immediate 24/7 assistance</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Quick Action Section (Floating Style but in Flow) -->
+<section class="mt-4">
+<button class="w-full h-16 bg-primary-container text-white rounded-full font-headline-lg-mobile text-headline-lg-mobile shadow-lg active:scale-95 duration-200 transition-all flex items-center justify-center gap-3 pulsate-glow" onclick="window.location.href='{{DATA:SCREEN:SCREEN_10}}'">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">support_agent</span>
+        Get Immediate Support
+      </button>
+<p class="text-center text-label-sm text-on-surface-variant mt-3 px-8">
+        Our agents are available 24/7 for discreet, professional help.
+      </p>
+</section>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-20 px-4 pb-safe bg-surface-container-lowest dark:bg-inverse-surface z-50 rounded-t-xl shadow-lg border-t border-outline-variant dark:border-outline">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant/50 transition-colors px-2 py-1 active:scale-90 duration-150" onclick="window.location.href='{{DATA:SCREEN:SCREEN_11}}'">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant/50 transition-colors px-2 py-1 active:scale-90 duration-150" onclick="window.location.href='{{DATA:SCREEN:SCREEN_5}}'">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-sm text-label-sm">Map</span>
+</button>
+<button class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-bold bg-primary-container/10 rounded-xl px-2 py-1 active:scale-90 duration-150" onclick="window.location.href='{{DATA:SCREEN:SCREEN_15}}'">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">school</span>
+<span class="font-label-sm text-label-sm">Edu Hub</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant/50 transition-colors px-2 py-1 active:scale-90 duration-150" onclick="window.location.href='{{DATA:SCREEN:SCREEN_12}}'">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</button>
+</nav>
+<script>
+    // Micro-interaction for content cards
+    document.querySelectorAll('.group').forEach(item => {
+      item.addEventListener('touchstart', () => {
+        item.classList.add('bg-surface-container-low');
+      });
+      item.addEventListener('touchend', () => {
+        item.classList.remove('bg-surface-container-low');
+      });
+    });
+  </script>
+
+
+</body></html>

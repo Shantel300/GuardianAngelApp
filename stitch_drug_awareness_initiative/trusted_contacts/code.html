@@ -1,0 +1,266 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Guardian Angel - Trusted Contacts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-secondary": "#ffffff",
+                "on-background": "#191c1e",
+                "inverse-primary": "#ffb3b0",
+                "tertiary-fixed": "#6bfe9c",
+                "on-primary-fixed-variant": "#92001b",
+                "secondary": "#0060ac",
+                "tertiary-fixed-dim": "#4ae183",
+                "surface-tint": "#b52330",
+                "on-secondary-fixed-variant": "#004883",
+                "tertiary-container": "#00aa59",
+                "surface-bright": "#f7f9fc",
+                "on-tertiary": "#ffffff",
+                "surface-container-low": "#f2f4f7",
+                "secondary-container": "#68abff",
+                "tertiary": "#006d37",
+                "primary-fixed-dim": "#ffb3b0",
+                "primary-container": "#ff5a5f",
+                "primary": "#b52330",
+                "background": "#f7f9fc",
+                "secondary-fixed-dim": "#a4c9ff",
+                "on-primary": "#ffffff",
+                "surface-container": "#eceef1",
+                "error": "#ba1a1a",
+                "surface-container-lowest": "#ffffff",
+                "outline": "#8e706f",
+                "on-error-container": "#93000a",
+                "error-container": "#ffdad6",
+                "surface-variant": "#e0e3e6",
+                "on-secondary-container": "#003e73",
+                "on-error": "#ffffff",
+                "surface": "#f7f9fc",
+                "on-secondary-fixed": "#001c39",
+                "on-primary-container": "#61000e",
+                "surface-container-high": "#e6e8eb",
+                "on-tertiary-container": "#003517",
+                "on-primary-fixed": "#410007",
+                "inverse-surface": "#2d3133",
+                "primary-fixed": "#ffdad8",
+                "on-tertiary-fixed": "#00210c",
+                "secondary-fixed": "#d4e3ff",
+                "outline-variant": "#e2bebc",
+                "surface-container-highest": "#e0e3e6",
+                "on-tertiary-fixed-variant": "#005228",
+                "surface-dim": "#d8dadd",
+                "on-surface": "#191c1e",
+                "on-surface-variant": "#5a403f",
+                "inverse-on-surface": "#eff1f4"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "stack-sm": "8px",
+                "container-padding": "20px",
+                "stack-md": "16px",
+                "margin-page": "20px",
+                "stack-lg": "24px",
+                "gutter-grid": "16px"
+            },
+            "fontFamily": {
+                "headline-lg": ["Plus Jakarta Sans"],
+                "label-sm": ["Plus Jakarta Sans"],
+                "body-lg": ["Plus Jakarta Sans"],
+                "headline-xl": ["Plus Jakarta Sans"],
+                "body-md": ["Plus Jakarta Sans"],
+                "headline-lg-mobile": ["Plus Jakarta Sans"],
+                "label-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f7f9fc;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .contact-card-shadow {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+        .bento-pulse {
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen text-on-surface">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-container-padding h-16 bg-surface dark:bg-background docked full-width top-0 fixed z-50">
+<div class="flex items-center gap-3 active:scale-95 transition-transform duration-150 cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-primary-fixed overflow-hidden border-2 border-primary-container flex items-center justify-center">
+<img class="w-8 h-8 object-contain" data-alt="A friendly penguin mascot illustration for a safety app, wearing a small golden halo and a supportive smile. The character is rendered in a soft, 3D corporate style with vibrant red and white tones, sitting against a clean, minimal white background. The mood is comforting and vigilant, representing a protective companion." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuGtFCcbRGxSI_pvyUzYEZU2Lm3OQD_N6VYMwMjESr0HybMYkm5e6sXO-SxkSL3o1ok7xTUrR_yBAhD4-P-vvP2-AIUjOmlmFazYAyp8rHrhirU7J6DsVL6DPbagHdI-Mr65gXlK4d7HcHTL7LLHSQMPdgGZPLcSDxQXd80X9ILghBju01Lmy6QBS8Wrc147-bQgslLr0ddMqUyTOOswbVXNjvaaLQtfddXKkXwu7cWyt7UKJMaNT6om6xxdo5pHA_yo48e46JcDg">
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed-dim">Guardian Angel</h1>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-high transition-colors p-2 rounded-full active:scale-95">
+            settings
+        </button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 mt-16 mb-24 px-container-padding">
+<!-- Welcome Section -->
+<div class="py-stack-lg">
+<h2 class="font-headline-lg text-headline-lg text-on-background mb-2">Trusted Contacts</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">These people will be notified instantly if you trigger an emergency alert.</p>
+</div>
+<!-- Contacts Bento List -->
+<div class="grid grid-cols-1 gap-stack-md">
+<!-- Contact Item: Mom -->
+<div class="bg-surface-container-lowest rounded-xl p-4 contact-card-shadow flex items-center justify-between border border-outline-variant/30 hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A warm, professional portrait of a woman in her late 50s with a kind expression and soft lighting. The image is a high-quality studio headshot with a clean, neutral background, reflecting a reliable family member. The overall aesthetic is calm and supportive, fitting for a 'Mom' contact in a safety application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBg0EqKWDO-3BM5UzbOsTlW-VOdVXX7BqbJu4qJLf9G8mEZGwMJUcYAvI-qaUjB8fRWmbLsQThUsSTiXFCj2js6O8N1iHxEzGdrTXc3vK7RiHP6tlc6Gm-dqwvof6DZhlXS6L8SUvML2LKhyx91QPAK7dJ7M_83_FCXQ0Sl1E3gFGXQ4sXzPHXS8l91nxtAUx_Pt16c0bJn5qpmrQVhq5aPrTMBtA_pdDzZdl7qckFjPqPHVqRnwmrx5UesrSyMtTQPprg7rx4Dh_E">
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-tertiary-container border-2 border-surface-container-lowest rounded-full"></div>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-background">Mom</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">+230 5 123 4567</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="bg-tertiary-fixed-dim/20 text-on-tertiary-fixed-variant px-3 py-1 rounded-full font-label-sm text-[10px] uppercase tracking-wider">Notified</span>
+</div>
+</div>
+<!-- Contact Item: Dad -->
+<div class="bg-surface-container-lowest rounded-xl p-4 contact-card-shadow flex items-center justify-between border border-outline-variant/30 hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A friendly and dependable portrait of a middle-aged man with short dark hair and a warm smile. The photograph is brightly lit with a soft-focus outdoor background, suggesting a safe and reachable guardian figure. The style is natural, high-resolution, and fits a modern, trustworthy mobile app interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCT3-Ug0pDxnhd09-9yIqqyZQOU4CcoqZjnBxQe-yPuafHXyA-Z2ykqI4u0v5sFNy4yHw2SEOkoCOJ1ARuG0Z-q_YaqtQpwduo6EdJ56VgzQdGFJQcaZpJDJKhgmnz8ypbd8W0Q7GwZBj78l3jfj5GRkECoIBHlWZqVWSBGvoBlPKtF1I-5fGNtPXebqXlei48_4DMXe8BzS1QFgKV6cHj-Vq2UvgfN5jDb6BQM5FgrSHsEhr2oH8Up87kJpO0Oc3a0On_m08p9TJo">
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-tertiary-container border-2 border-surface-container-lowest rounded-full"></div>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-background">Dad</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">+230 5 987 6543</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="bg-tertiary-fixed-dim/20 text-on-tertiary-fixed-variant px-3 py-1 rounded-full font-label-sm text-[10px] uppercase tracking-wider">Notified</span>
+</div>
+</div>
+<!-- Contact Item: Bestie ❤️ -->
+<div class="bg-surface-container-lowest rounded-xl p-4 contact-card-shadow flex items-center justify-between border border-outline-variant/30 hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A vibrant, modern portrait of a young woman in her early 20s with a cheerful and energetic expression. She is in a well-lit urban setting with soft morning light. The image captures a sense of close friendship and reliability, styled with contemporary aesthetics and high-contrast clarity for a mobile UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOEYDq3plJDIBFQ2xFlwu_YSH8yKWbYHrre9huCTm_uZ25uKXuY-FqBVFVBTXl1qWsmkkgLwQULi9z-ifI3s6mUIMicr1niew1Bq7l1vnCPmwEiWlg2gxch316VdcpMnHP0ufE4XaoUGgcTvg-_9dKQHZDNSyO-bAnaQdVAGXupC0eTPL3-bIN9Sq3UqxJCwgyuSpQD9JyLjF8jtxrajClHC77FAHfam2WtOPZ5mqvS8cwKrUSj_GNCN0zyNczKHhjj8hzXYPHdkQ">
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-tertiary-container border-2 border-surface-container-lowest rounded-full"></div>
+</div>
+<div>
+<div class="flex items-center gap-1">
+<h3 class="font-label-md text-label-md text-on-background">Bestie</h3>
+<span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">+230 5 112 2334</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="bg-tertiary-fixed-dim/20 text-on-tertiary-fixed-variant px-3 py-1 rounded-full font-label-sm text-[10px] uppercase tracking-wider">Notified</span>
+</div>
+</div>
+<!-- Contact Item: Alex -->
+<div class="bg-surface-container-lowest rounded-xl p-4 contact-card-shadow flex items-center justify-between border border-outline-variant/30 hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A clean, minimalist portrait of a young man with a neutral, calm expression. The lighting is soft and even, highlighting features clearly against a pastel-colored studio background. The style is modern, approachable, and professional, representing a reliable friend or peer in a safety network context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAVgCTu-oJhqWmOWNXc7y6dCQXIzcNDID6Srh3kEdFIMvLufE-mwVtqGXpf3SpNCcXK6B7NXK5cxG-fJ2oW3A0GMIlubgmXDykpXEhPtbNIyVUFq6p22RRwp3zXmppeS2Ian4SdNpdrtDvhUQ93MTFNE4bEFGbUVxnJ9Dr1yDCqo7T9UqqQ4MJR0q1vSsojTB8KSVxjLSfbnU6hQP1RT7AWGrpfJ5x8F4cp_j9r9aCTpVTA5FQG75GpQYDx1wA5iO9tWg_4t0jR9A">
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-primary border-2 border-surface-container-lowest rounded-full bento-pulse"></div>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-background">Alex</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">+230 5 667 7889</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="bg-secondary-fixed text-on-secondary-fixed-variant px-3 py-1 rounded-full font-label-sm text-[10px] uppercase tracking-wider">Pending</span>
+</div>
+</div>
+</div>
+<!-- Call to Action Section -->
+<div class="mt-stack-lg p-6 bg-primary-fixed rounded-2xl border border-primary-container/20 flex flex-col gap-4">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary-container text-[28px]" style="font-variation-settings: 'FILL' 1;">shield_person</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-primary-fixed">Network Status</h4>
+<p class="font-body-md text-sm text-on-primary-fixed-variant">3 out of 4 contacts have active Guardian permission.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button Area (Contextual for this screen) -->
+<div class="fixed bottom-24 left-0 right-0 px-container-padding z-40">
+<a href="{{DATA:SCREEN:SCREEN_11}}" class="w-full h-14 bg-primary-container text-on-primary-container font-label-md text-label-md rounded-full shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">person_add</span>
+            Add New Contact
+        </a>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface-container-lowest dark:bg-surface-dim shadow-[0_-4px_15px_rgba(0,0,0,0.06)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:bg-surface-container-high dark:hover:bg-surface-container-highest rounded-full transition-colors active:scale-90 duration-200" href="{{DATA:SCREEN:SCREEN_11}}">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:bg-surface-container-high dark:hover:bg-surface-container-highest rounded-full transition-colors active:scale-90 duration-200" href="{{DATA:SCREEN:SCREEN_5}}">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-sm text-label-sm">Map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:bg-surface-container-high dark:hover:bg-surface-container-highest rounded-full transition-colors active:scale-90 duration-200" href="{{DATA:SCREEN:SCREEN_15}}">
+<span class="material-symbols-outlined">school</span>
+<span class="font-label-sm text-label-sm">Learn</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-on-primary-fixed-variant text-on-primary-container dark:text-primary-fixed rounded-full px-4 py-1 active:scale-90 transition-transform duration-200" href="{{DATA:SCREEN:SCREEN_12}}">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for clicking contact cards
+        document.querySelectorAll('.bg-surface-container-lowest').forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.add('scale-98');
+                setTimeout(() => card.classList.remove('scale-98'), 100);
+            });
+        });
+
+        // Simple dark mode toggle logic if needed in future
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // document.documentElement.classList.add('dark');
+        }
+    </script>
+
+
+</body></html>

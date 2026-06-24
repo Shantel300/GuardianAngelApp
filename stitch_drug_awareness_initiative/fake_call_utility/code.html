@@ -1,0 +1,208 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Guardian Angel - Fake Call</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "inverse-primary": "#ffb3b0",
+                        "tertiary-fixed": "#6bfe9c",
+                        "on-primary-fixed-variant": "#92001b",
+                        "secondary": "#0060ac",
+                        "tertiary-fixed-dim": "#4ae183",
+                        "surface-tint": "#b52330",
+                        "on-secondary-fixed-variant": "#004883",
+                        "tertiary-container": "#00aa59",
+                        "surface-bright": "#f7f9fc",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f2f4f7",
+                        "secondary-container": "#68abff",
+                        "tertiary": "#006d37",
+                        "primary-fixed-dim": "#ffb3b0",
+                        "primary-container": "#ff5a5f",
+                        "primary": "#b52330",
+                        "background": "#f7f9fc",
+                        "secondary-fixed-dim": "#a4c9ff",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#eceef1",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#8e706f",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e0e3e6",
+                        "on-secondary-container": "#003e73",
+                        "on-error": "#ffffff",
+                        "surface": "#f7f9fc",
+                        "on-secondary-fixed": "#001c39",
+                        "on-primary-container": "#61000e",
+                        "surface-container-high": "#e6e8eb",
+                        "on-tertiary-container": "#003517",
+                        "on-primary-fixed": "#410007",
+                        "inverse-surface": "#2d3133",
+                        "primary-fixed": "#ffdad8",
+                        "on-tertiary-fixed": "#00210c",
+                        "secondary-fixed": "#d4e3ff",
+                        "outline-variant": "#e2bebc",
+                        "surface-container-highest": "#e0e3e6",
+                        "on-tertiary-fixed-variant": "#005228",
+                        "surface-dim": "#d8dadd",
+                        "on-surface": "#191c1e",
+                        "on-surface-variant": "#5a403f",
+                        "inverse-on-surface": "#eff1f4",
+                        "fake-call-bg": "#2D2D5F"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "container-padding": "20px",
+                        "stack-md": "16px",
+                        "margin-page": "20px",
+                        "stack-lg": "24px",
+                        "gutter-grid": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                        "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .countdown-ring {
+            transition: stroke-dashoffset 1s linear;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        .pulse-glow {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.15; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body class="bg-fake-call-bg text-white font-body-md overflow-hidden antialiased">
+<!-- Main Canvas -->
+<div class="relative min-h-screen flex flex-col items-center px-container-padding pt-12 pb-16">
+<!-- Header / Back -->
+<div class="w-full flex items-center justify-between mb-12">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 active:scale-90 transition-transform" onclick="window.location.href='{{DATA:SCREEN:SCREEN_11}}'">
+<span class="material-symbols-outlined text-white">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile">Fake Call</h1>
+<div class="w-10"></div> <!-- Spacer -->
+</div>
+<!-- Countdown Section -->
+<div class="flex-1 flex flex-col items-center justify-center w-full">
+<p class="font-body-lg text-body-lg text-white/80 mb-stack-lg">We'll call you in</p>
+<!-- Circular Progress Ring -->
+<div class="relative flex items-center justify-center w-48 h-48 mb-stack-lg">
+<div class="absolute inset-0 rounded-full bg-secondary-container/10 pulse-glow"></div>
+<svg class="w-full h-full">
+<circle cx="96" cy="96" fill="transparent" r="88" stroke="rgba(255, 255, 255, 0.1)" stroke-width="8"></circle>
+<circle class="countdown-ring" cx="96" cy="96" fill="transparent" id="progress-circle" r="88" stroke="#68abff" stroke-dasharray="552.92" stroke-dashoffset="0" stroke-width="8" style="stroke-dasharray: 552.92px; stroke-dashoffset: 552.92px;"></circle>
+</svg>
+<span class="absolute font-headline-xl text-headline-xl text-white" id="countdown-number">0</span>
+</div>
+<p class="font-label-md text-label-md text-secondary-container">seconds</p>
+</div>
+<!-- Incoming Call Preview -->
+<div class="w-full max-w-sm mt-auto mb-16">
+<div class="bg-white/10 backdrop-blur-md rounded-[24px] p-6 border border-white/5 shadow-2xl">
+<div class="flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full overflow-hidden border-4 border-secondary-container/30 mb-stack-md shadow-lg">
+<img class="w-full h-full object-cover" data-alt="A warm, comforting close-up portrait of a middle-aged woman with a kind smile, set against a soft indoor background with warm morning light filtering through a window. The style is professional portraiture with a shallow depth of field, maintaining the protective warmth aesthetic of the app, using soft blue and white tones in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDxD-aSAltrmKSiu99XGtDZeOUDgywDa8B7DLZ8GTPLOVnBMYjiGOYWW5eMTwwrK3NryVZv01s_aPP-hY_t1dIh9u9LgZHtNgDMJxw9eHushZNj_lX6u0cVLzblWwp2WhlAiqfPsyXEF6ihQYwRiDbh_5ifk3ZCGXfSl91NZ4sODKSqQwv4WIaVVg5aS7sj5jfMqukeNfCh0cqWqR1wQe0ijyzs4VE-0vCrbtSh-tOWpceN-wbaH_DgFHpFNa4sAzFAlk3QWI2W1A">
+</div>
+<h2 class="font-headline-lg text-headline-lg text-white mb-1">Mom</h2>
+<p class="font-body-md text-body-md text-white/60">Incoming call...</p>
+</div>
+</div>
+</div>
+<!-- Action Button -->
+<div class="w-full px-4">
+<button class="w-full py-4 px-8 rounded-full border-2 border-white/20 font-label-md text-label-md text-white uppercase tracking-widest hover:bg-white/5 active:scale-95 transition-all flex items-center justify-center gap-2" onclick="window.location.href='{{DATA:SCREEN:SCREEN_11}}'">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">cancel</span>
+                Cancel Call
+            </button>
+</div>
+<!-- Atmospheric Background Element -->
+<div class="absolute -top-24 -left-24 w-64 h-64 bg-primary/20 blur-[100px] rounded-full"></div>
+<div class="absolute -bottom-24 -right-24 w-64 h-64 bg-secondary/20 blur-[100px] rounded-full"></div>
+</div>
+<script>
+        // Simple Countdown Logic
+        let count = 3;
+        const countElement = document.getElementById('countdown-number');
+        const circle = document.getElementById('progress-circle');
+        const radius = 88;
+        const circumference = 2 * Math.PI * radius;
+        
+        circle.style.strokeDasharray = circumference;
+
+        function updateCountdown() {
+            const offset = circumference - ((count / 3) * circumference);
+            circle.style.strokeDashoffset = offset;
+            countElement.innerText = count;
+
+            if (count > 0) {
+                count--;
+                setTimeout(updateCountdown, 1000);
+            } else {
+                // Potential transition to actual "call" screen or loop
+                countElement.innerText = "0";
+                circle.style.strokeDashoffset = circumference;
+            }
+        }
+
+        updateCountdown();
+
+        // Button interaction
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Feedback for user
+                btn.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    btn.style.transform = 'scale(1)';
+                }, 100);
+            });
+        });
+    </script>
+
+
+</body></html>

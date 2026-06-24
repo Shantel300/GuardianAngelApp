@@ -1,0 +1,198 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f7f9fc;
+        }
+        .pulsate-subtle {
+            animation: pulsate 3s ease-in-out infinite;
+        }
+        @keyframes pulsate {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+        .gradient-mesh {
+            background-color: #f7f9fc;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(255, 90, 95, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(0, 96, 172, 0.03) 0px, transparent 50%);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#001c39",
+                        "surface-bright": "#f7f9fc",
+                        "surface-tint": "#b52330",
+                        "surface-container": "#eceef1",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e0e3e6",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#00210c",
+                        "inverse-primary": "#ffb3b0",
+                        "surface-dim": "#d8dadd",
+                        "on-secondary": "#ffffff",
+                        "primary": "#b52330",
+                        "inverse-surface": "#2d3133",
+                        "surface-container-high": "#e6e8eb",
+                        "secondary-fixed": "#d4e3ff",
+                        "on-error": "#ffffff",
+                        "tertiary": "#006d37",
+                        "secondary-container": "#68abff",
+                        "tertiary-fixed": "#6bfe9c",
+                        "primary-fixed": "#ffdad8",
+                        "inverse-on-surface": "#eff1f4",
+                        "on-secondary-container": "#003e73",
+                        "on-background": "#191c1e",
+                        "surface-container-low": "#f2f4f7",
+                        "on-tertiary-fixed-variant": "#005228",
+                        "on-tertiary-container": "#003517",
+                        "secondary": "#0060ac",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#ffb3b0",
+                        "on-primary-fixed": "#410007",
+                        "on-primary-container": "#61000e",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#004883",
+                        "surface": "#f7f9fc",
+                        "on-surface-variant": "#5a403f",
+                        "secondary-fixed-dim": "#a4c9ff",
+                        "on-surface": "#191c1e",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#e0e3e6",
+                        "background": "#f7f9fc",
+                        "tertiary-container": "#00aa59",
+                        "primary-container": "#ff5a5f",
+                        "outline-variant": "#e2bebc",
+                        "tertiary-fixed-dim": "#4ae183",
+                        "on-primary-fixed-variant": "#92001b",
+                        "outline": "#8e706f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "24px",
+                        "stack-md": "16px",
+                        "gutter-grid": "16px",
+                        "container-padding": "20px",
+                        "stack-sm": "8px",
+                        "margin-page": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface antialiased overflow-hidden">
+<div class="relative min-h-screen flex flex-col items-center justify-between gradient-mesh p-container-padding">
+<!-- Header Branding -->
+<header class="w-full flex justify-center py-stack-lg">
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 bg-primary-container rounded-xl flex items-center justify-center shadow-lg transform rotate-3">
+<span class="material-symbols-outlined text-white text-3xl" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">Guardian Angel</h2>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col items-center justify-center text-center w-full max-w-md mx-auto gap-stack-lg relative">
+<!-- Atmospheric Glow -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none -z-10">
+<div class="w-72 h-72 bg-primary-container/20 blur-[80px] rounded-full pulsate-subtle"></div>
+</div>
+<!-- Mascot Illustration -->
+<div class="relative group">
+<div class="absolute -inset-4 bg-white/40 blur-2xl rounded-full scale-90 group-hover:scale-100 transition-transform duration-700"></div>
+<img class="w-64 h-64 md:w-80 md:h-80 object-contain relative z-10 drop-shadow-xl transform group-hover:-translate-y-2 transition-transform duration-500 ease-out" data-alt="A friendly and adorable cartoon penguin mascot wearing a small red protective shield emblem on its chest. The penguin is waving warmly, set against a soft, clean white and pastel background that feels supportive and safe. The style is modern corporate with soft edges, featuring bright, comforting studio lighting and high-contrast coral accents that pop from the neutral base." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUVWByQVsOPtJunBMA7KCHzBeAUDTxOjO2QTr3RJEQXLb2JYgmYw05hSxNCcQOhwIvHPLDbpD--v2ibZIdq7Q3Wtzt-ZK0g1pr5s8R1WxryjaotDqv7ff9lmF_XQWKDuo-qZTDz_3bbjR-PDVWXQIj9CfaVMk0iGctj_FhF6hJQHz5VId7GnItw73Ys5FjxHZTkrbT_m9LQPWEfsefgtvS-20PCVF8_ufnPpRQp-VvqzpQxrLc--OkDeWZL4x-eDr8Qw5iWaBWtjE">
+</div>
+<!-- Copy Group -->
+<div class="space-y-4 px-4">
+<h1 class="font-headline-xl text-headline-xl text-on-surface leading-tight">
+                    You're never alone. <br>
+<span class="text-primary">We've got your back!</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-[280px] mx-auto">
+                    Your personal safety companion for community care and support.
+                </p>
+</div>
+</main>
+<!-- Footer Actions -->
+<footer class="w-full max-w-md mx-auto flex flex-col gap-4 pb-12">
+<button class="w-full py-5 bg-primary-container text-white rounded-full font-label-md text-label-md shadow-[0_12px_24px_rgba(255,90,95,0.3)] active:scale-95 transition-all duration-200 flex items-center justify-center gap-2" onclick="location.href='{{DATA:SCREEN:SCREEN_11}}'">
+                Get Started
+                <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+<button class="w-full py-4 text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high rounded-full transition-colors active:scale-95" onclick="location.href='{{DATA:SCREEN:SCREEN_11}}'">
+                I already have an account
+            </button>
+<!-- Status Dots (Visual Decor) -->
+<div class="flex justify-center gap-2 mt-2">
+<div class="w-2 h-2 bg-primary rounded-full"></div>
+<div class="w-2 h-2 bg-primary/20 rounded-full"></div>
+<div class="w-2 h-2 bg-primary/20 rounded-full"></div>
+</div>
+</footer>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+        function handleGetStarted() {
+            // Visual feedback before navigation
+            const btn = document.querySelector('button');
+            btn.innerHTML = `<span class="material-symbols-outlined animate-spin">progress_activity</span>`;
+            
+            setTimeout(() => {
+                // Mock redirect
+                console.log('Redirecting to dashboard...');
+                // In a real app: window.location.href = '/dashboard';
+            }, 800);
+        }
+
+        // Parallax effect for the mascot
+        document.addEventListener('mousemove', (e) => {
+            const mascot = document.querySelector('img[data-alt*="penguin"]');
+            if (mascot) {
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 40;
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 40;
+                mascot.style.transform = `translate(${xAxis}px, ${yAxis}px)`;
+            }
+        });
+    </script>
+
+
+</body></html>

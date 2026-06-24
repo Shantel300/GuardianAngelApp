@@ -1,0 +1,300 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Guardian Angel - Live Journey Tracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pulsing-dot {
+            position: relative;
+        }
+        .pulsing-dot::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #0060ac;
+            animation: pulse 2s infinite;
+            top: 0;
+            left: 0;
+            opacity: 0.6;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.6; }
+            70% { transform: scale(3); opacity: 0; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+        .floating-penguin {
+            animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .gradient-blur {
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.85);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "inverse-primary": "#ffb3b0",
+                        "tertiary-fixed": "#6bfe9c",
+                        "on-primary-fixed-variant": "#92001b",
+                        "secondary": "#0060ac",
+                        "tertiary-fixed-dim": "#4ae183",
+                        "surface-tint": "#b52330",
+                        "on-secondary-fixed-variant": "#004883",
+                        "tertiary-container": "#00aa59",
+                        "surface-bright": "#f7f9fc",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f2f4f7",
+                        "secondary-container": "#68abff",
+                        "tertiary": "#006d37",
+                        "primary-fixed-dim": "#ffb3b0",
+                        "primary-container": "#ff5a5f",
+                        "primary": "#b52330",
+                        "background": "#f7f9fc",
+                        "secondary-fixed-dim": "#a4c9ff",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#eceef1",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#8e706f",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e0e3e6",
+                        "on-secondary-container": "#003e73",
+                        "on-error": "#ffffff",
+                        "surface": "#f7f9fc",
+                        "on-secondary-fixed": "#001c39",
+                        "on-primary-container": "#61000e",
+                        "surface-container-high": "#e6e8eb",
+                        "on-tertiary-container": "#003517",
+                        "on-primary-fixed": "#410007",
+                        "inverse-surface": "#2d3133",
+                        "primary-fixed": "#ffdad8",
+                        "on-tertiary-fixed": "#00210c",
+                        "secondary-fixed": "#d4e3ff",
+                        "outline-variant": "#e2bebc",
+                        "surface-container-highest": "#e0e3e6",
+                        "on-tertiary-fixed-variant": "#005228",
+                        "surface-dim": "#d8dadd",
+                        "on-surface": "#191c1e",
+                        "on-surface-variant": "#5a403f",
+                        "inverse-on-surface": "#eff1f4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "container-padding": "20px",
+                        "stack-md": "16px",
+                        "margin-page": "20px",
+                        "stack-lg": "24px",
+                        "gutter-grid": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                        "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md overflow-x-hidden min-h-screen">
+<!-- Top AppBar - As specified in Shared Components -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface dark:bg-background flex justify-between items-center w-full px-container-padding h-16">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed overflow-hidden flex items-center justify-center">
+<img class="w-full h-full object-contain" data-alt="A charming and friendly penguin mascot designed in a clean vector style, appearing calm and protective. The penguin wears a small red heart emblem on its chest, embodying a 'Guardian Angel' personality. The background is a soft light blue with warm coral accents, creating an atmosphere of safety and supportive companionship for a modern security application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCo8z5ozgaNG_rVyTO5zZMQCNrbNI5yT6XwRpkaxOi9-XqxciKDoLSJSwiYQEtTY7S0qShl275TFsSsBP7EQabryboSl73BhPzeW0OgAL0KU7pE20FdWIdQG6cy8DWvvBu1injAKuEgLrK3svtq7XXiRUwZtTLI1kT3svujcbJwiJu_V0WWL4M2X4UEm_i9JywfzugZxXCq3U4gqXSF8-TIxH5tAkZ5B9z1iSuDw-3BROU2z390B1B7c0jrarv3LwOJAzowdDLJsqU">
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed-dim">Guardian Angel</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-all">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+<main class="relative h-screen pt-16 pb-20 flex flex-col">
+<!-- Live Journey Status Header -->
+<div class="absolute top-20 left-4 right-4 z-40">
+<div class="gradient-blur rounded-xl p-4 shadow-lg border border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close up portrait of a young woman named Sarah with a friendly and calm expression. She is in a softly lit urban setting at dusk. The image has a professional, clean quality with a shallow depth of field, highlighting her as the primary user of a safety tracking application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxxFH94L-J94QQ4vLYLYso_ZNoUXjNiGC78CfPLZ8HNYOm180e_5Tzb30DeEOeQCGPh42Ep4mXXM09GYj4GVaIaXxvvsK9IueNotAmpItpXjnNSIaOYsZFoolm6xOfCTCZfGguLGDoJtlpDXgkhCnRkeW55IkNTIXiwjUzxx40AV2giduz1Wsva1qQAsgmGMrtcE91rJsB-YVTe5hf8R-fF_H0zTZ3YziY4Lk9W-yRHHCW2CbuJ9H1uG8ys-JyWhb9v8yvoYMc4Z0">
+</div>
+<div>
+<p class="font-label-md text-on-surface">Sarah is en route</p>
+<p class="text-[12px] text-on-surface-variant">Last updated: Just now</p>
+</div>
+</div>
+<div class="flex items-center gap-2 bg-tertiary-fixed-dim/20 px-3 py-1 rounded-full">
+<div class="w-2 h-2 rounded-full bg-tertiary-container animate-pulse"></div>
+<span class="text-on-tertiary-container font-label-sm uppercase">Live</span>
+</div>
+</div>
+</div>
+<!-- Map Section -->
+<div class="flex-1 w-full bg-surface-variant relative overflow-hidden">
+<!-- Mock Map Background -->
+<div class="absolute inset-0 z-0 bg-cover bg-center" data-alt="A high-fidelity minimalist street map view of a city neighborhood at twilight. The map features a clearly defined vibrant blue path winding through several blocks, representing a planned walking route. Soft lighting and low contrast colors like off-white, light grey, and subtle greens are used to maintain legibility while adhering to the serene guardian aesthetic." data-location="San Francisco" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuARGSaw6kNPxof4J_b8CIeCqbDlXJ_Qy_64ppa8SWL51ZTNdHz-xS-La9vUFtltVxSPQMVF3JYPK4zH8baDkanfTOR-loO5mBOpLPfDvhE8gPnXruxjlA3gJCsxlH5dS1td7p7vhCuvmx1nXUVVqk86uiQ-0nbHiDzitotz3TLyoe1DD53W5cvRojxL9je0wYkIQKCOpYksx0GdWXcd8FA0KBV0Farcfdg7HIRo4H3ezn2FZhieM4EpVAQ_vRVYawyUQBvsKNdkt4c')">
+<!-- Route SVG overlay -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 800">
+<path d="M 100 700 Q 150 650 200 600 T 300 400 L 250 200" fill="none" opacity="0.3" stroke="#0060ac" stroke-dasharray="1, 15" stroke-linecap="round" stroke-width="8"></path>
+<path class="drop-shadow-sm" d="M 100 700 Q 150 650 200 600 T 300 400" fill="none" stroke="#0060ac" stroke-linecap="round" stroke-width="6"></path>
+<!-- Current Position Pulse -->
+<circle class="animate-pulse" cx="300" cy="400" fill="#0060ac" r="10"></circle>
+<circle class="animate-ping opacity-30" cx="300" cy="400" fill="none" r="20" stroke="#0060ac" stroke-width="2"></circle>
+<!-- Destination Marker -->
+<g transform="translate(250, 200)">
+<path class="drop-shadow-md" d="M 0 -20 L 10 0 L 0 20 L -10 0 Z" fill="#b52330"></path>
+<circle cx="0" cy="0" fill="white" r="4"></circle>
+</g>
+</svg>
+</div>
+<!-- Mascot Engagement Bubble -->
+<div class="absolute bottom-64 left-4 right-4 z-40 flex items-end gap-3 floating-penguin">
+<div class="w-16 h-16 bg-white rounded-full p-2 shadow-lg border border-outline-variant">
+<img class="w-full h-full" data-alt="Close up of the friendly penguin mascot smiling with closed eyes, conveying a sense of warmth and reliability. The penguin is illustrated in a soft vector style with thick, friendly lines and a small red heart on its chest." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCC8SQ684tzZZHFvQUQCEdjJVcK6cVsmfyh4iDXSnV6f0hVhIYa_VY2yiao2FECVyjzStYRwjonrpCzP1EjXtqUMHL7mWrfL7jPgttxNr9tqQLryBUUoFRO12LRrWeZR2U60HPDaqox7-r7yEOHAA6HhPidM8zhdopKzPBa5Jrz36QoCnjXyOFtx8RRa9Lq2fKaLmkh0p8h_aTIPX_F-z73mWCzZs7VenrqBUKbbZSnOSYVBikoesdT5F4xgudBL-322cFeQGQFLvg">
+</div>
+<div class="bg-white rounded-2xl p-4 shadow-md border border-outline-variant relative max-w-[70%]">
+<div class="absolute left-0 bottom-4 -translate-x-full w-0 h-0 border-t-[8px] border-t-transparent border-r-[12px] border-r-white border-b-[8px] border-b-transparent"></div>
+<p class="text-on-surface font-label-md">"Almost there, Sarah! You're doing great. I'm keeping a close eye on everything."</p>
+</div>
+</div>
+</div>
+<!-- Dashboard / Controls Area -->
+<div class="relative z-40 bg-white rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.1)] p-6 -mt-10">
+<div class="w-12 h-1.5 bg-surface-variant rounded-full mx-auto mb-6"></div>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="bg-surface-container-low p-4 rounded-2xl flex flex-col items-center justify-center border border-outline-variant">
+<span class="text-on-surface-variant font-label-sm uppercase tracking-wider mb-1">Estimated Arrival</span>
+<span class="text-headline-lg font-bold text-on-surface">09:15 PM</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-2xl flex flex-col items-center justify-center border border-outline-variant">
+<span class="text-on-surface-variant font-label-sm uppercase tracking-wider mb-1">Distance remaining</span>
+<span class="text-headline-lg font-bold text-on-surface">1.2 km</span>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<a href="{{DATA:SCREEN:SCREEN_11}}" class="w-full py-5 bg-tertiary-container hover:bg-tertiary text-on-tertiary rounded-full font-headline-lg-mobile shadow-lg active:scale-95 transition-all flex items-center justify-center gap-3">
+<span class="material-symbols-outlined">check_circle</span>
+                    I Have Arrived Safely
+                </a>
+<div class="grid grid-cols-3 gap-3">
+<button class="p-3 bg-surface-container-high rounded-2xl flex flex-col items-center justify-center gap-1 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-secondary">mic</span>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase">Record Audio</span>
+</button>
+<button class="p-3 bg-surface-container-high rounded-2xl flex flex-col items-center justify-center gap-1 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-secondary">videocam</span>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase">Record Video</span>
+</button>
+<button class="p-3 bg-surface-container-high rounded-2xl flex flex-col items-center justify-center gap-1 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-secondary">photo_camera</span>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase">Take Photo</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation - As specified in Shared Components -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface-container-lowest dark:bg-surface-dim shadow-[0_-4px_15px_rgba(0,0,0,0.06)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:bg-surface-container-high rounded-full transition-all" href="{{DATA:SCREEN:SCREEN_11}}">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-on-primary-fixed-variant text-on-primary-container dark:text-primary-fixed rounded-full px-4 py-1 active:scale-90 transition-transform duration-200" href="{{DATA:SCREEN:SCREEN_5}}">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-label-sm text-label-sm">Map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:bg-surface-container-high rounded-full transition-all" href="{{DATA:SCREEN:SCREEN_15}}">
+<span class="material-symbols-outlined">school</span>
+<span class="font-label-sm text-label-sm">Learn</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:bg-surface-container-high rounded-full transition-all" href="{{DATA:SCREEN:SCREEN_10}}">
+<span class="material-symbols-outlined">emergency_share</span>
+<span class="font-label-sm text-label-sm">SOS</span>
+</a>
+</nav>
+<!-- SOS Floating Button (Extra Safety) -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center z-[60] animate-bounce hover:animate-none">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">priority_high</span>
+</button>
+<script>
+        // Simple click interaction for the "Arrived Safely" button
+        document.querySelector('.bg-tertiary-container').addEventListener('click', function() {
+            this.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Checking In...';
+            setTimeout(() => {
+                this.style.backgroundColor = '#00aa59';
+                this.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Checked In!';
+                confetti();
+            }, 1500);
+        });
+
+        // Basic mock confetti effect
+        function confetti() {
+            for(let i=0; i<30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'fixed z-[100] w-2 h-2 rounded-full pointer-events-none';
+                particle.style.left = '50%';
+                particle.style.bottom = '15%';
+                particle.style.backgroundColor = ['#ff5a5f', '#4ae183', '#68abff', '#ffd700'][Math.floor(Math.random()*4)];
+                document.body.appendChild(particle);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 5 + Math.random() * 10;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity - 10;
+                
+                let x = 0;
+                let y = 0;
+                let gravity = 0.5;
+                
+                const anim = setInterval(() => {
+                    x += vx;
+                    y += vy;
+                    vy += gravity;
+                    particle.style.transform = `translate(${x}px, ${y}px)`;
+                    if(y > 500) {
+                        clearInterval(anim);
+                        particle.remove();
+                    }
+                }, 20);
+            }
+        }
+    </script>
+
+
+</body></html>
