@@ -82,9 +82,9 @@ mobile/
 
 ### 1. **Chat Flow** ✅
 - Send a message in the Chat tab
-- Watch it get classified (mock or real API)
-- See the risk assessment with signals and confidence scores
-- Back/retry from assessment screen
+- Receive a generated or reviewed safety reply inside the conversation
+- View the compact risk status and optional detailed assessment
+- Only the latest four in-memory messages are sent to the local API
 
 **Test Messages:**
 - `"I feel pressured"` → Should get Amber with peer_pressure signal
@@ -95,7 +95,9 @@ mobile/
 ### 2. **Wearable Monitoring** ✅
 - Select different scenarios (Normal, Exercise, Stress, Recovery Risk)
 - Watch readings update every 2 seconds (animated)
-- Stress and Recovery Risk scenarios trigger check-in alerts
+- A real baseline anomaly engine analyses each simulated reading
+- Three sustained unexplained abnormal readings trigger a neutral notification
+- Exercise suppresses false alerts
 - Respond to check-in with 5 options (I'm fine, exercising, stressed, cravings, help)
 
 **Test Flow:**
@@ -143,7 +145,7 @@ mobile/
 | **API Connection** | ✅ Integrated | Set `EXPO_PUBLIC_API_URL` in `.env` |
 | **Support Resources** | ✅ Done | Links to coping tools (basic) |
 | **Profile/Settings** | ✅ Basic | Settings screens present |
-| **Notifications** | ⏳ TODO | expo-notifications configured but not integrated |
+| **Local Notifications** | ✅ Integrated | Sustained anomaly → neutral check-in notification |
 | **Trusted Contacts** | ⏳ TODO | UI scaffolding ready |
 | **Referral Flow** | ⏳ TODO | UI scaffolding ready |
 | **SOS Button** | ⏳ TODO | Needs press-hold implementation |
@@ -297,9 +299,8 @@ Once this testing is complete:
 
 1. **Integrate Person 1's API** (when ready)
 2. **SOS Screen** — Press-hold button + protocol selection
-3. **Local Notifications** — Check-in alerts
-4. **Trusted Contacts** — Add/edit/manage
-5. **Referral Flow** — Review & approve sharing
+3. **Trusted Contacts** — Add/edit/manage
+4. **Referral Flow** — Review & approve sharing
 6. **Dark Mode** (optional)
 7. **Production Build** (when all features ready)
 
@@ -372,7 +373,7 @@ npx expo start -c  # Clear cache
 - ✅ 4:00–5:00 Session management + polish
 
 **Next Phase:**
-- Person 1 API integration
+- Physical-phone notification verification
 - SOS & notification flows
 - Production optimization
 

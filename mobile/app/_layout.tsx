@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import * as Notifications from 'expo-notifications';
 import {
   useFonts,
   PlusJakartaSans_400Regular,
@@ -38,6 +39,21 @@ export default function RootLayout() {
       SplashScreen.hideAsync().catch(() => {});
     }
   }, [ready]);
+
+  useEffect(() => {
+    const redirect = (response: Notifications.NotificationResponse | null) => {
+      const url = response?.notification.request.content.data?.url;
+      if (typeof url === 'string' && url.startsWith('/')) {
+        router.push(url as never);
+        void Notifications.clearLastNotificationResponseAsync();
+      }
+    };
+
+    redirect(Notifications.getLastNotificationResponse());
+    const subscription =
+      Notifications.addNotificationResponseReceivedListener(redirect);
+    return () => subscription.remove();
+  }, []);
 
   if (!ready) {
     return null;

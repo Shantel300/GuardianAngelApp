@@ -1,21 +1,28 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from app.main import app, service
+from app.main import app, reply_generator, service
 from app.schemas import ClassificationResult
 
 
 @pytest.fixture(autouse=True)
 def disable_model_loading(monkeypatch):
     monkeypatch.setattr(service, "load", lambda: None)
+    monkeypatch.setattr(reply_generator, "load", lambda: None)
     service.loaded = False
+    reply_generator.loaded = False
 
 
 def test_health_contract() -> None:
     with TestClient(app) as client:
         response = client.get("/health")
     assert response.status_code == 200
-    assert set(response.json()) == {"status", "modelLoaded", "version"}
+    assert set(response.json()) == {
+        "status",
+        "modelLoaded",
+        "generatorLoaded",
+        "version",
+    }
 
 
 def test_api_documentation_is_disabled() -> None:
@@ -65,3 +72,52 @@ def test_submitted_message_is_not_logged(monkeypatch, caplog) -> None:
     assert response.status_code == 200
     assert secret not in caplog.text
 
+
+def test_chat_contract_uses_template_when_generator_is_unavailable(
+    monkeypatch,
+) -> None:
+    assessment = ClassificationResult(
+        riskLevel="amber",
+        signals=[{"label": "peer_pressure", "probability": 0.91}],
+        reasons=["The message contains language associated with peer pressure."],
+        recommendedActions=["Choose whether to contact someone you trust."],
+        uncertain=False,
+    )
+    monkeypatch.setattr(service, "classify", lambda _: assessment)
+    with TestClient(app) as client:
+        response = client.post(
+            "/chat",
+            json={
+                "messages": [
+                    {"role": "user", "content": "My friends are pressuring me."}
+                ]
+            },
+        )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["replySource"] == "template"
+    assert body["assessment"] == assessment.model_dump()
+    assert body["reply"]
+
+
+def test_chat_rejects_more_than_four_messages() -> None:
+    messages = [
+        {"role": "user", "content": f"Message number {index}"}
+        for index in range(5)
+    ]
+    with TestClient(app) as client:
+        response = client.post("/chat", json={"messages": messages})
+    assert response.status_code == 422
+
+
+def test_chat_requires_a_final_user_message() -> None:
+    with TestClient(app) as client:
+        response = client.post(
+            "/chat",
+            json={
+                "messages": [
+                    {"role": "assistant", "content": "How can I help?"}
+                ]
+            },
+        )
+    assert response.status_code == 422

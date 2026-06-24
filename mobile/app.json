@@ -25,7 +25,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-notifications",
+        {
+          "color": "#ff5a5f",
+          "defaultChannel": "wellbeing-check-ins"
+        }
+      ]
     ]
   }
 }

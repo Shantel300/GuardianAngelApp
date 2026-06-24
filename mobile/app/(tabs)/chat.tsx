@@ -17,7 +17,14 @@ import { MaterialIcons } from '@expo/vector-icons';
 import ChatBubble from '../../components/ChatBubble';
 import PrivacyBanner from '../../components/PrivacyBanner';
 import Mascot from '../../components/Mascot';
-import { classifyMessage, healthCheck } from '../../services/classifierApi';
+import RiskBadge from '../../components/RiskBadge';
+import {
+  ChatMessage,
+  ReplySource,
+  SourcedClassificationResult,
+  healthCheck,
+  sendChatMessage,
+} from '../../services/classifierApi';
 import { COLORS, TYPE, SPACING, RADIUS } from '../../constants/theme';
 
 type Message = { id: number; type: 'user' | 'assistant'; text: string };
@@ -33,6 +40,9 @@ export default function ChatScreen() {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [apiStatus, setApiStatus] = useState<ApiStatus>('checking');
+  const [assessment, setAssessment] =
+    useState<SourcedClassificationResult | null>(null);
+  const [replySource, setReplySource] = useState<ReplySource | null>(null);
   const scrollRef = useRef<ScrollView>(null);
 
   const checkConnection = async () => {
@@ -59,18 +69,31 @@ export default function ChatScreen() {
     setIsLoading(true);
 
     try {
-      const result = await classifyMessage(trimmed, apiStatus === 'ready');
-      setIsLoading(false);
-      router.push({
-        pathname: '/assessment',
-        params: { result: JSON.stringify(result) },
-      });
+      const context: ChatMessage[] = [
+        ...messages.map<ChatMessage>((item) => ({
+          role: item.type,
+          content: item.text,
+        })),
+        { role: 'user' as const, content: trimmed },
+      ].slice(-4);
+      const result = await sendChatMessage(
+        context,
+        apiStatus === 'ready'
+      );
+      setMessages((prev) => [
+        ...prev,
+        { id: prev.length + 1, type: 'assistant', text: result.reply },
+      ]);
+      setAssessment(result.assessment);
+      setReplySource(result.replySource);
+      if (result.replySource === 'mock') setApiStatus('fallback');
     } catch {
-      setIsLoading(false);
       setMessages((prev) => [
         ...prev,
         { id: prev.length + 1, type: 'assistant', text: 'Sorry, I had trouble with that. Please try again.' },
       ]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -85,6 +108,8 @@ export default function ChatScreen() {
           style: 'destructive',
           onPress: () => {
             setMessages([{ id: 0, type: 'assistant', text: "Hi! I'm here to listen. What's on your mind?" }]);
+            setAssessment(null);
+            setReplySource(null);
             Alert.alert('Session ended', 'All messages have been cleared.');
           },
         },
@@ -109,7 +134,7 @@ export default function ChatScreen() {
         </Pressable>
       </View>
 
-      <PrivacyBanner message="Chat stays in memory; prototype analysis may use the local AI laptop" />
+      <PrivacyBanner message="Only four recent messages are processed; they are not saved" />
 
       <View
         style={[
@@ -154,6 +179,30 @@ export default function ChatScreen() {
             <View style={styles.typing}>
               <ActivityIndicator size="small" color={COLORS.secondary} />
               <Text style={styles.typingText}>Guardian is thinking…</Text>
+            </View>
+          )}
+          {assessment && !isLoading && (
+            <View style={styles.assessmentSummary}>
+              <View style={styles.assessmentRow}>
+                <RiskBadge level={assessment.riskLevel} />
+                <Text style={styles.sourceText}>
+                  {replySource === 'llm'
+                    ? 'Generated locally'
+                    : replySource === 'template'
+                      ? 'Reviewed safety reply'
+                      : 'Demo fallback reply'}
+                </Text>
+              </View>
+              <Pressable
+                onPress={() =>
+                  router.push({
+                    pathname: '/assessment',
+                    params: { result: JSON.stringify(assessment) },
+                  })
+                }
+              >
+                <Text style={styles.assessmentLink}>Why am I seeing this?</Text>
+              </Pressable>
             </View>
           )}
         </ScrollView>
@@ -243,6 +292,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   retryText: { ...TYPE.labelSm, color: COLORS.secondary },
+  assessmentSummary: {
+    backgroundColor: COLORS.surfaceLowest,
+    borderWidth: 1,
+    borderColor: 'rgba(226,190,188,0.5)',
+    borderRadius: RADIUS.lg,
+    padding: 12,
+    marginTop: 4,
+    marginBottom: 10,
+  },
+  assessmentRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 10,
+  },
+  sourceText: { ...TYPE.labelSm, color: COLORS.onSurfaceVariant },
+  assessmentLink: {
+    ...TYPE.labelMd,
+    color: COLORS.secondary,
+    marginTop: 10,
+  },
 
   suggestions: { paddingHorizontal: SPACING.page, paddingVertical: 10, gap: 8 },
   chip: {

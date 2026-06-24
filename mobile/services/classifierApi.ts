@@ -21,6 +21,25 @@ export type SourcedClassificationResult = ClassificationResult & {
   source: ClassificationSource;
 };
 
+export type ChatMessage = {
+  role: 'user' | 'assistant';
+  content: string;
+};
+
+export type ReplySource = 'llm' | 'template' | 'mock';
+
+export type ChatResult = {
+  reply: string;
+  assessment: SourcedClassificationResult;
+  replySource: ReplySource;
+};
+
+type ApiChatResult = {
+  reply: string;
+  assessment: ClassificationResult;
+  replySource: 'llm' | 'template';
+};
+
 type HealthResponse = {
   status: 'ready' | 'degraded';
   modelLoaded: boolean;
@@ -56,9 +75,43 @@ function isClassificationResult(value: unknown): value is ClassificationResult {
   );
 }
 
+function isApiChatResult(value: unknown): value is ApiChatResult {
+  if (!value || typeof value !== 'object') return false;
+  const candidate = value as Partial<ApiChatResult>;
+  return (
+    typeof candidate.reply === 'string' &&
+    candidate.reply.trim().length > 0 &&
+    isClassificationResult(candidate.assessment) &&
+    (candidate.replySource === 'llm' || candidate.replySource === 'template')
+  );
+}
+
 async function useMock(text: string): Promise<SourcedClassificationResult> {
   const result = await mockClassify(text);
   return { ...result, source: 'mock' };
+}
+
+function chooseMockReply(result: ClassificationResult): string {
+  if (result.riskLevel === 'red') {
+    return 'It sounds like you may need immediate support. Would you like to contact someone you trust or open the SOS options now?';
+  }
+  if (result.riskLevel === 'amber') {
+    return 'That sounds difficult, and you do not have to handle it alone. Would you like to explore a coping strategy or contact someone you trust?';
+  }
+  if (result.uncertain) {
+    return 'I am not completely sure what you need yet. Would you like to tell me a little more or complete a quick check-in?';
+  }
+  return 'Thank you for sharing that. I am here with you. Would you like to tell me a little more?';
+}
+
+async function useMockChat(messages: ChatMessage[]): Promise<ChatResult> {
+  const latest = messages[messages.length - 1]?.content ?? '';
+  const assessment = await useMock(latest);
+  return {
+    reply: chooseMockReply(assessment),
+    assessment,
+    replySource: 'mock',
+  };
 }
 
 export async function classifyMessage(
@@ -103,6 +156,45 @@ export async function healthCheck(): Promise<boolean> {
     );
   } catch {
     return false;
+  }
+}
+
+export async function sendChatMessage(
+  messages: ChatMessage[],
+  apiReady = true
+): Promise<ChatResult> {
+  const limitedMessages = messages
+    .slice(-4)
+    .map((message) => ({ ...message, content: message.content.trim() }))
+    .filter((message) => message.content.length > 0);
+
+  if (
+    limitedMessages.length === 0 ||
+    limitedMessages[limitedMessages.length - 1].role !== 'user'
+  ) {
+    return useMockChat([
+      { role: 'user', content: 'I am not sure what to say yet.' },
+    ]);
+  }
+
+  if (!apiReady) return useMockChat(limitedMessages);
+
+  try {
+    const response = await apiClient.post<unknown>(
+      '/chat',
+      { messages: limitedMessages },
+      { timeout: 25000 }
+    );
+    if (!isApiChatResult(response.data)) {
+      return useMockChat(limitedMessages);
+    }
+    return {
+      reply: response.data.reply,
+      assessment: { ...response.data.assessment, source: 'api' },
+      replySource: response.data.replySource,
+    };
+  } catch {
+    return useMockChat(limitedMessages);
   }
 }
 

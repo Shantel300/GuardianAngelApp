@@ -6,10 +6,18 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from .inference import ModelNotReadyError, ModelService
-from .schemas import ClassificationRequest, ClassificationResult, HealthResponse
+from .reply_generator import ReplyGenerator
+from .schemas import (
+    ChatRequest,
+    ChatResponse,
+    ClassificationRequest,
+    ClassificationResult,
+    HealthResponse,
+)
 
 VERSION = "prototype-1"
 service = ModelService()
+reply_generator = ReplyGenerator()
 logging.getLogger("uvicorn.access").disabled = True
 
 
@@ -19,6 +27,10 @@ async def lifespan(_: FastAPI):
         service.load()
     except Exception:
         service.loaded = False
+    try:
+        reply_generator.load()
+    except Exception:
+        reply_generator.loaded = False
     yield
 
 
@@ -56,6 +68,7 @@ def health() -> HealthResponse:
     return HealthResponse(
         status="ready" if service.loaded else "degraded",
         modelLoaded=service.loaded,
+        generatorLoaded=reply_generator.loaded,
         version=VERSION,
     )
 
@@ -70,3 +83,21 @@ def classify(payload: ClassificationRequest) -> ClassificationResult:
             detail="The classification model is not ready.",
         ) from exc
 
+
+@app.post("/chat", response_model=ChatResponse)
+def chat(payload: ChatRequest) -> ChatResponse:
+    latest_message = payload.messages[-1].content
+    try:
+        assessment = service.classify(latest_message)
+    except ModelNotReadyError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="The classification model is not ready.",
+        ) from exc
+
+    reply, source = reply_generator.generate(payload.messages, assessment)
+    return ChatResponse(
+        reply=reply,
+        assessment=assessment,
+        replySource=source,
+    )

@@ -13,7 +13,7 @@ const TOGGLES: Toggle[] = [
   {
     key: 'chatbot',
     title: 'Private Chatbot',
-    desc: 'For this prototype, each message is temporarily analysed by the team’s local AI laptop over trusted Wi-Fi. Messages and conversations are not saved.',
+    desc: 'For this prototype, up to four recent messages are temporarily processed by the team’s local AI laptop over trusted Wi-Fi. They are not saved, but the laptop administrator could technically access data during processing.',
   },
   { key: 'monitoring', title: 'Simulated Monitoring', desc: 'Track simulated heart rate, activity and sleep patterns.' },
   { key: 'alerts', title: 'Trusted-Contact Alerts', desc: 'Send limited alerts if unusual patterns are detected.' },

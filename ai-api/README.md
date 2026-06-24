@@ -15,7 +15,7 @@ uv pip install --python .venv/Scripts/python.exe -r requirements.txt
 ## Build model artifacts
 
 The repository includes classifier weights and evaluation metadata. Download
-the 90 MB encoder once:
+the 90 MB classifier encoder and local SmolLM2 reply model once:
 
 ```powershell
 python scripts/bootstrap_model.py
@@ -38,6 +38,15 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --no-access-log
 accepts `{ "text": "..." }` and returns `riskLevel`, `signals`, `reasons`,
 `recommendedActions`, and `uncertain`.
 
+`POST /chat` accepts at most four in-memory user/assistant messages. It
+classifies the latest user message, applies a safety gate, and then returns a
+short generated or reviewed template reply. Red-risk results always bypass
+free-form generation.
+
+On low-memory CPU laptops the optimized 135M generator is used only for
+low-risk conversation. Amber and red replies use immediate reviewed language,
+which keeps high-impact responses fast and predictable.
+
 The service keeps no conversation history, writes no submitted messages, and
 does not expose interactive API documentation. Use only fictional messages
 over trusted local Wi-Fi during the prototype demo.
@@ -47,4 +56,3 @@ over trusted local Wi-Fi during the prototype demo.
 ```powershell
 pytest -q
 ```
-

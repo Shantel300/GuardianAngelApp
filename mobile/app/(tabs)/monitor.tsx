@@ -1,11 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { View, Text, ScrollView, Pressable, Alert, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import BentoCard from '../../components/BentoCard';
 import { IconChip } from '../../components/Icon';
-import { WEARABLE_SCENARIOS } from '../../data/wearableScenarios';
+import {
+  WEARABLE_SCENARIOS,
+  normalScenario,
+} from '../../data/wearableScenarios';
+import {
+  AnomalyState,
+  analyseReading,
+  calculateBaseline,
+  initialAnomalyState,
+} from '../../services/wearableAnomaly';
+import {
+  ensureNotificationPermission,
+  sendWellbeingNotification,
+} from '../../services/notificationService';
 import { COLORS, TYPE, SPACING, RADIUS } from '../../constants/theme';
 
 type IconName = React.ComponentProps<typeof MaterialIcons>['name'];
@@ -15,27 +28,68 @@ export default function MonitorScreen() {
   const [scenario, setScenario] = useState(WEARABLE_SCENARIOS[0]);
   const [reading, setReading] = useState(scenario.readings[0]);
   const [animating, setAnimating] = useState(false);
+  const [analysisText, setAnalysisText] = useState('Readings match your personal baseline.');
+  const [notificationsAllowed, setNotificationsAllowed] =
+    useState<boolean | null>(null);
+  const readingIndex = useRef(0);
+  const anomalyState = useRef<AnomalyState>(initialAnomalyState());
+  const baseline = useMemo(
+    () => calculateBaseline(normalScenario.readings),
+    []
+  );
 
   useEffect(() => {
     if (!animating) return;
-    let i = 0;
     const id = setInterval(() => {
-      i = (i + 1) % scenario.readings.length;
-      setReading(scenario.readings[i]);
+      readingIndex.current =
+        (readingIndex.current + 1) % scenario.readings.length;
+      setReading(scenario.readings[readingIndex.current]);
     }, 2000);
     return () => clearInterval(id);
   }, [animating, scenario]);
 
-  const selectScenario = (id: string) => {
+  useEffect(() => {
+    if (!animating) return;
+    const result = analyseReading(
+      reading,
+      baseline,
+      anomalyState.current
+    );
+    anomalyState.current = result.state;
+    setAnalysisText(
+      result.unusual
+        ? `Unusual pattern observed (${result.state.consecutiveUnusual}/3).`
+        : result.reasons[0] ?? 'Readings match your personal baseline.'
+    );
+    if (result.shouldAlert) void triggerCheckIn();
+  }, [reading, animating, baseline]);
+
+  const selectScenario = async (id: string) => {
     const s = WEARABLE_SCENARIOS.find((x) => x.id === id);
     if (!s) return;
     setScenario(s);
+    readingIndex.current = 0;
     setReading(s.readings[0]);
+    anomalyState.current = {
+      ...anomalyState.current,
+      consecutiveUnusual: 0,
+      alertIssued: false,
+    };
+    setAnalysisText('Building a short pattern before deciding whether to check in.');
+    const allowed = await ensureNotificationPermission();
+    setNotificationsAllowed(allowed);
     setAnimating(true);
-    if (s.shouldAlert) setTimeout(() => triggerCheckIn(), 3000);
   };
 
-  const triggerCheckIn = () => {
+  const triggerCheckIn = async () => {
+    if (notificationsAllowed !== false) {
+      try {
+        await sendWellbeingNotification();
+        return;
+      } catch {
+        // Fall through to the in-app check-in when notifications are unavailable.
+      }
+    }
     Alert.alert('Wellbeing check-in', 'Your body signals have changed. Are you okay?', [
       { text: "I'm fine", onPress: () => setAnimating(false) },
       { text: "I'm exercising", onPress: () => setAnimating(false) },
@@ -106,10 +160,10 @@ export default function MonitorScreen() {
         </View>
 
         {/* Hint */}
-        {scenario.shouldAlert ? (
+        {animating ? (
           <View style={[styles.hint, { backgroundColor: COLORS.warningTint, borderLeftColor: COLORS.warning }]}>
             <Text style={[styles.hintText, { color: '#8a4b00' }]}>
-              This scenario triggers a wellbeing check-in shortly after selection.
+              {analysisText}
             </Text>
           </View>
         ) : (
