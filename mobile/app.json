@@ -4,9 +4,9 @@
     "slug": "guardian-angel",
     "version": "0.1.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "scheme": "guardian-angel",
+    "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#f7f9fc"
     },
@@ -14,30 +14,18 @@
       "**/*"
     ],
     "ios": {
-      "supportsTabletMode": true,
+      "supportsTablet": true,
       "bundleIdentifier": "com.guardianangel.mobile"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#f7f9fc"
-      },
       "package": "com.guardianangel.mobile"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "bundler": "metro"
     },
     "plugins": [
-      [
-        "expo-notifications",
-        {
-          "icon": "./assets/notification-icon.png",
-          "color": "#ff5a5f",
-          "sounds": [
-            "./assets/notification-sound.wav"
-          ]
-        }
-      ]
+      "expo-router",
+      "expo-font"
     ]
   }
 }

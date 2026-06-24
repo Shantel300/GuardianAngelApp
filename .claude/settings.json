@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "bash",
+      "git",
+      "gh"
+    ]
+  },
+  "github": {
+    "allowPush": true,
+    "allowPR": true,
+    "requirePRApproval": false
+  }
+}

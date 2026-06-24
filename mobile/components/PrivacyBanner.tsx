@@ -1,32 +1,32 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { THEME } from '../constants/theme';
+import { MaterialIcons } from '@expo/vector-icons';
+import { COLORS, RADIUS, TYPE } from '../constants/theme';
 
 type Props = {
   message?: string;
 };
 
-export default function PrivacyBanner({ message = '🔒 This session will not be saved' }: Props) {
+export default function PrivacyBanner({ message = 'This session will not be saved' }: Props) {
   return (
     <View style={styles.banner}>
-      <Text style={styles.text}>{message}</Text>
+      <MaterialIcons name="lock" size={16} color={COLORS.secondary} style={{ marginRight: 8 }} />
+      <Text style={[TYPE.labelSm, styles.text]}>{message}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   banner: {
-    backgroundColor: '#e3f2fd',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.secondaryTint,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
     marginHorizontal: 20,
-    marginVertical: 16,
-    borderRadius: THEME.borderRadius.md,
+    marginVertical: 12,
+    borderRadius: RADIUS.md,
     borderLeftWidth: 4,
-    borderLeftColor: THEME.colors.secondary,
+    borderLeftColor: COLORS.secondary,
   },
-  text: {
-    fontSize: 12,
-    fontWeight: '500' as const,
-    color: '#003e73',
-  },
+  text: { color: COLORS.onSecondaryContainer, flex: 1, letterSpacing: 0.1 },
 });

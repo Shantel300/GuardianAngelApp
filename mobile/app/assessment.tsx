@@ -1,8 +1,12 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { MaterialIcons } from '@expo/vector-icons';
+import BentoCard from '../components/BentoCard';
 import RiskBadge from '../components/RiskBadge';
+import PrimaryButton from '../components/PrimaryButton';
 import { ClassificationResult } from '../services/mockClassifier';
-import { THEME } from '../constants/theme';
+import { COLORS, TYPE, SPACING, RADIUS } from '../constants/theme';
 
 export default function AssessmentScreen() {
   const router = useRouter();
@@ -10,221 +14,124 @@ export default function AssessmentScreen() {
 
   let result: ClassificationResult | null = null;
   let userMessage = '';
-
   try {
     if (params.result) {
       result = JSON.parse(params.result as string);
       userMessage = (params.userMessage as string) || '';
     }
-  } catch (error) {
-    console.error('Error parsing result:', error);
+  } catch {
+    result = null;
   }
 
   if (!result) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f7f9fc' }}>
-        <Text>Error loading assessment</Text>
-      </View>
+      <SafeAreaView style={[styles.safe, styles.center]}>
+        <Text style={TYPE.bodyMd}>Could not load the assessment.</Text>
+      </SafeAreaView>
     );
   }
 
-  const handleBackToChat = () => {
-    router.back();
-  };
-
-  const handleGetSupport = () => {
-    router.push('/(tabs)/support');
-  };
-
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#f7f9fc' }}>
-      <View style={{ paddingHorizontal: 20, paddingVertical: 20 }}>
-        {/* Header */}
-        <View style={{ marginBottom: 30 }}>
-          <Text style={{ fontSize: 14, fontWeight: '600', color: '#5a403f', marginBottom: 16 }}>
-            Assessment Result
-          </Text>
-          <RiskBadge level={result.riskLevel} size="large" />
-        </View>
+    <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <Text style={styles.label}>ASSESSMENT RESULT</Text>
+        <RiskBadge level={result.riskLevel} size="large" />
 
-        {/* User Message */}
-        {userMessage && (
-          <View style={{
-            backgroundColor: '#fff',
-            padding: 16,
-            borderRadius: 16,
-            marginBottom: 20,
-            borderWidth: 1,
-            borderColor: '#e0e3e6'
-          }}>
-            <Text style={{ fontSize: 12, color: '#5a403f', fontWeight: '600', marginBottom: 8 }}>
-              You said:
-            </Text>
-            <Text style={{ fontSize: 14, color: '#191c1e', lineHeight: 20 }}>
-              "{userMessage}"
-            </Text>
-          </View>
+        {!!userMessage && (
+          <BentoCard style={{ marginTop: 4 }}>
+            <Text style={styles.quoteLabel}>You said</Text>
+            <Text style={styles.quote}>"{userMessage}"</Text>
+          </BentoCard>
         )}
 
-        {/* Detected Signals */}
         {result.signals.length > 0 && (
-          <View style={{
-            backgroundColor: '#fff',
-            padding: 16,
-            borderRadius: 16,
-            marginBottom: 20,
-            borderWidth: 1,
-            borderColor: '#e0e3e6'
-          }}>
-            <Text style={{ fontSize: 16, fontWeight: '700', color: '#191c1e', marginBottom: 12 }}>
-              Detected Signals
-            </Text>
-            {result.signals.map((signal, idx) => (
-              <View key={idx} style={{ marginBottom: idx < result.signals.length - 1 ? 12 : 0 }}>
-                <View style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: 6
-                }}>
-                  <Text style={{ fontSize: 14, fontWeight: '600', color: '#191c1e' }}>
-                    • {signal.label.replace(/_/g, ' ')}
-                  </Text>
-                  <Text style={{ fontSize: 12, fontWeight: '600', color: '#0060ac' }}>
-                    {(signal.probability * 100).toFixed(0)}%
-                  </Text>
+          <BentoCard>
+            <Text style={styles.cardTitle}>Detected signals</Text>
+            <View style={{ gap: 14, marginTop: 12 }}>
+              {result.signals.map((s, i) => (
+                <View key={i}>
+                  <View style={styles.signalRow}>
+                    <Text style={styles.signalName}>{s.label.replace(/_/g, ' ')}</Text>
+                    <Text style={styles.signalPct}>{Math.round(s.probability * 100)}%</Text>
+                  </View>
+                  <View style={styles.track}>
+                    <View style={[styles.fill, { width: `${Math.round(s.probability * 100)}%` }]} />
+                  </View>
                 </View>
-                <View style={{
-                  height: 6,
-                  backgroundColor: '#e0e3e6',
-                  borderRadius: 3,
-                  overflow: 'hidden'
-                }}>
-                  <View style={{
-                    height: '100%',
-                    backgroundColor: '#0060ac',
-                    width: `${signal.probability * 100}%`
-                  }} />
-                </View>
+              ))}
+            </View>
+          </BentoCard>
+        )}
+
+        <BentoCard>
+          <Text style={styles.cardTitle}>Why this result?</Text>
+          <View style={{ gap: 8, marginTop: 10 }}>
+            {result.reasons.map((r, i) => (
+              <View key={i} style={styles.bulletRow}>
+                <MaterialIcons name="circle" size={6} color={COLORS.onSurfaceVariant} style={{ marginTop: 7 }} />
+                <Text style={styles.bullet}>{r}</Text>
               </View>
             ))}
           </View>
-        )}
+        </BentoCard>
 
-        {/* Reasons */}
-        <View style={{
-          backgroundColor: '#fff',
-          padding: 16,
-          borderRadius: 16,
-          marginBottom: 20,
-          borderWidth: 1,
-          borderColor: '#e0e3e6'
-        }}>
-          <Text style={{ fontSize: 16, fontWeight: '700', color: '#191c1e', marginBottom: 12 }}>
-            Why This Result?
-          </Text>
-          {result.reasons.map((reason, idx) => (
-            <View key={idx} style={{ marginBottom: idx < result.reasons.length - 1 ? 8 : 0 }}>
-              <Text style={{ fontSize: 14, color: '#5a403f', lineHeight: 20 }}>
-                • {reason}
-              </Text>
-            </View>
-          ))}
-        </View>
-
-        {/* Uncertainty Warning */}
         {result.uncertain && (
-          <View style={{
-            backgroundColor: '#fff3e0',
-            padding: 12,
-            borderRadius: 12,
-            marginBottom: 20,
-            borderLeftWidth: 4,
-            borderLeftColor: '#ff9800'
-          }}>
-            <Text style={{ fontSize: 12, color: '#e65100', fontWeight: '500' }}>
-              ⚠️ System is uncertain. Please select how you are feeling below.
-            </Text>
+          <View style={styles.uncertain}>
+            <MaterialIcons name="help-outline" size={16} color={COLORS.warning} />
+            <Text style={styles.uncertainText}>The system is uncertain — please share how you're feeling.</Text>
           </View>
         )}
 
-        {/* Recommended Actions */}
-        <View style={{
-          backgroundColor: '#fff',
-          padding: 16,
-          borderRadius: 16,
-          marginBottom: 30,
-          borderWidth: 1,
-          borderColor: '#e0e3e6'
-        }}>
-          <Text style={{ fontSize: 16, fontWeight: '700', color: '#191c1e', marginBottom: 12 }}>
-            Suggested Next Steps
-          </Text>
-          {result.recommendedActions.map((action, idx) => (
-            <View key={idx} style={{ marginBottom: idx < result.recommendedActions.length - 1 ? 12 : 0 }}>
-              <View style={{
-                backgroundColor: '#f2f4f7',
-                paddingVertical: 10,
-                paddingHorizontal: 12,
-                borderRadius: 8,
-                borderLeftWidth: 3,
-                borderLeftColor: THEME.colors.secondary
-              }}>
-                <Text style={{ fontSize: 14, color: '#191c1e', fontWeight: '500' }}>
-                  {action}
-                </Text>
+        <BentoCard>
+          <Text style={styles.cardTitle}>Suggested next steps</Text>
+          <View style={{ gap: 10, marginTop: 10 }}>
+            {result.recommendedActions.map((a, i) => (
+              <View key={i} style={styles.action}>
+                <Text style={styles.actionText}>{a}</Text>
               </View>
-            </View>
-          ))}
-        </View>
+            ))}
+          </View>
+        </BentoCard>
 
-        {/* Disclaimer */}
-        <View style={{
-          backgroundColor: '#f0f8ff',
-          padding: 12,
-          borderRadius: 12,
-          marginBottom: 20,
-          borderWidth: 1,
-          borderColor: '#b3d9ff'
-        }}>
-          <Text style={{ fontSize: 11, color: '#003e73', lineHeight: 16 }}>
-            ℹ️ This assessment is based on demonstration data and is not a diagnosis. If you're in crisis, please reach out to a trusted adult or emergency services.
+        <View style={styles.disclaimer}>
+          <MaterialIcons name="info" size={15} color={COLORS.secondary} />
+          <Text style={styles.disclaimerText}>
+            This is based on demonstration data and is not a diagnosis. In a crisis, reach a trusted adult or emergency services.
           </Text>
         </View>
 
-        {/* Action Buttons */}
-        <TouchableOpacity
-          onPress={handleGetSupport}
-          style={{
-            backgroundColor: '#ff5a5f',
-            paddingVertical: 16,
-            borderRadius: 50,
-            alignItems: 'center',
-            marginBottom: 12
-          }}
-        >
-          <Text style={{ fontSize: 16, fontWeight: '600', color: '#fff' }}>
-            Get Support Resources
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={handleBackToChat}
-          style={{
-            backgroundColor: '#fff',
-            paddingVertical: 16,
-            borderRadius: 50,
-            alignItems: 'center',
-            borderWidth: 2,
-            borderColor: '#e0e3e6',
-            marginBottom: 40
-          }}
-        >
-          <Text style={{ fontSize: 16, fontWeight: '600', color: '#0060ac' }}>
-            Back to Chat
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+        <PrimaryButton label="Get Support Resources" icon="volunteer-activism" onPress={() => router.push('/(tabs)/support')} />
+        <PrimaryButton label="Back to Chat" variant="secondary" onPress={() => router.back()} style={{ marginTop: 4 }} />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: COLORS.background },
+  center: { alignItems: 'center', justifyContent: 'center' },
+  scroll: { paddingHorizontal: SPACING.page, paddingTop: 16, paddingBottom: 28, gap: 14 },
+  label: { ...TYPE.labelSm, color: COLORS.onSurfaceVariant },
+
+  quoteLabel: { ...TYPE.labelSm, color: COLORS.onSurfaceVariant },
+  quote: { ...TYPE.bodyMd, color: COLORS.onSurface, marginTop: 6 },
+
+  cardTitle: { ...TYPE.titleSm, color: COLORS.onSurface },
+  signalRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
+  signalName: { ...TYPE.labelMd, color: COLORS.onSurface, textTransform: 'capitalize' },
+  signalPct: { ...TYPE.labelMd, color: COLORS.secondary },
+  track: { height: 6, borderRadius: 3, backgroundColor: COLORS.surfaceHigh, overflow: 'hidden' },
+  fill: { height: '100%', backgroundColor: COLORS.secondary, borderRadius: 3 },
+
+  bulletRow: { flexDirection: 'row', gap: 8 },
+  bullet: { ...TYPE.bodyMd, color: COLORS.onSurfaceVariant, flex: 1 },
+
+  uncertain: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: COLORS.warningTint, padding: 12, borderRadius: RADIUS.md, borderLeftWidth: 4, borderLeftColor: COLORS.warning },
+  uncertainText: { ...TYPE.labelMd, color: '#8a4b00', flex: 1 },
+
+  action: { backgroundColor: COLORS.surfaceLow, paddingVertical: 12, paddingHorizontal: 14, borderRadius: RADIUS.md, borderLeftWidth: 3, borderLeftColor: COLORS.secondary },
+  actionText: { ...TYPE.labelMd, color: COLORS.onSurface },
+
+  disclaimer: { flexDirection: 'row', gap: 8, backgroundColor: COLORS.secondaryTint, padding: 12, borderRadius: RADIUS.md },
+  disclaimerText: { ...TYPE.labelSm, color: COLORS.onSecondaryContainer, flex: 1, lineHeight: 16 },
+});

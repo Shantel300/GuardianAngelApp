@@ -1,144 +1,99 @@
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { MaterialIcons } from '@expo/vector-icons';
+import BentoCard from '../../components/BentoCard';
+import { IconChip } from '../../components/Icon';
+import Mascot from '../../components/Mascot';
+import { COLORS, TYPE, SPACING, RADIUS } from '../../constants/theme';
 
-export default function ProfileScreen() {
+type IconName = React.ComponentProps<typeof MaterialIcons>['name'];
+
+type Item = { title: string; desc?: string; icon: IconName; color: string; tint: string; danger?: boolean; onPress?: () => void };
+
+function Row({ item }: { item: Item }) {
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#f7f9fc' }}>
-      <View style={{ paddingHorizontal: 20, paddingVertical: 20 }}>
-        <Text style={{ fontSize: 28, fontWeight: '700', color: '#191c1e', marginBottom: 20 }}>
-          Profile
-        </Text>
-
-        {/* User Info */}
-        <View style={{
-          backgroundColor: '#fff',
-          padding: 16,
-          borderRadius: 16,
-          marginBottom: 20,
-          borderWidth: 1,
-          borderColor: '#e0e3e6'
-        }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-            <View style={{
-              width: 60,
-              height: 60,
-              borderRadius: 50,
-              backgroundColor: '#ff5a5f',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginRight: 16
-            }}>
-              <Text style={{ fontSize: 28 }}>👤</Text>
-            </View>
-            <View>
-              <Text style={{ fontSize: 18, fontWeight: '700', color: '#191c1e' }}>
-                Sarah Johnson
-              </Text>
-              <Text style={{ fontSize: 12, color: '#5a403f' }}>
-                Member since June 2024
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Settings */}
-        <Text style={{ fontSize: 14, fontWeight: '700', color: '#191c1e', marginBottom: 12, textTransform: 'uppercase' }}>
-          Settings
-        </Text>
-
-        <View style={{
-          backgroundColor: '#fff',
-          padding: 16,
-          borderRadius: 16,
-          marginBottom: 12,
-          borderWidth: 1,
-          borderColor: '#e0e3e6'
-        }}>
-          <Text style={{ fontSize: 16, fontWeight: '600', color: '#191c1e' }}>
-            ⚙️ Preferences
-          </Text>
-        </View>
-
-        <View style={{
-          backgroundColor: '#fff',
-          padding: 16,
-          borderRadius: 16,
-          marginBottom: 12,
-          borderWidth: 1,
-          borderColor: '#e0e3e6'
-        }}>
-          <Text style={{ fontSize: 16, fontWeight: '600', color: '#191c1e' }}>
-            🔐 Privacy & Security
-          </Text>
-        </View>
-
-        {/* Data Management */}
-        <Text style={{ fontSize: 14, fontWeight: '700', color: '#191c1e', marginBottom: 12, textTransform: 'uppercase' }}>
-          Data Management
-        </Text>
-
-        <View style={{
-          backgroundColor: '#fff',
-          padding: 16,
-          borderRadius: 16,
-          marginBottom: 12,
-          borderWidth: 1,
-          borderColor: '#e0e3e6'
-        }}>
-          <Text style={{ fontSize: 16, fontWeight: '600', color: '#191c1e', marginBottom: 8 }}>
-            🗑️ Clear Chat History
-          </Text>
-          <Text style={{ fontSize: 12, color: '#5a403f' }}>
-            Permanently erase all local chat sessions
-          </Text>
-        </View>
-
-        <View style={{
-          backgroundColor: '#fff',
-          padding: 16,
-          borderRadius: 16,
-          marginBottom: 12,
-          borderWidth: 1,
-          borderColor: '#e0e3e6'
-        }}>
-          <Text style={{ fontSize: 16, fontWeight: '600', color: '#191c1e', marginBottom: 8 }}>
-            📋 View Privacy Policy
-          </Text>
-          <Text style={{ fontSize: 12, color: '#5a403f' }}>
-            Understand how your data is handled
-          </Text>
-        </View>
-
-        <View style={{
-          backgroundColor: '#fff',
-          padding: 16,
-          borderRadius: 16,
-          marginBottom: 20,
-          borderWidth: 1,
-          borderColor: '#e0e3e6'
-        }}>
-          <Text style={{ fontSize: 16, fontWeight: '600', color: '#191c1e', marginBottom: 8 }}>
-            ℹ️ About Guardian Angel
-          </Text>
-          <Text style={{ fontSize: 12, color: '#5a403f' }}>
-            Version 0.1.0 • Prototype
-          </Text>
-        </View>
-
-        {/* Logout */}
-        <View style={{
-          backgroundColor: '#fff3f3',
-          paddingVertical: 16,
-          paddingHorizontal: 16,
-          borderRadius: 16,
-          borderWidth: 1,
-          borderColor: '#ffb3b0',
-          alignItems: 'center'
-        }}>
-          <Text style={{ fontSize: 16, fontWeight: '600', color: '#b52330' }}>
-            Log Out
-          </Text>
-        </View>
+    <BentoCard style={styles.row} onPress={item.onPress}>
+      <IconChip name={item.icon} color={item.color} tint={item.tint} />
+      <View style={{ flex: 1, marginLeft: 14 }}>
+        <Text style={[styles.rowTitle, item.danger && { color: COLORS.primary }]}>{item.title}</Text>
+        {item.desc && <Text style={styles.rowDesc}>{item.desc}</Text>}
       </View>
-    </ScrollView>
+      <MaterialIcons name="arrow-forward-ios" size={15} color={COLORS.outline} />
+    </BentoCard>
   );
 }
+
+export default function ProfileScreen() {
+  const router = useRouter();
+
+  const settings: Item[] = [
+    { title: 'Preferences', icon: 'tune', color: COLORS.secondary, tint: COLORS.secondaryTint },
+    { title: 'Privacy & Security', icon: 'lock', color: COLORS.tertiary, tint: COLORS.tertiaryTint },
+    { title: 'Notifications', icon: 'notifications', color: COLORS.warning, tint: COLORS.warningTint },
+  ];
+
+  const data: Item[] = [
+    {
+      title: 'Clear Chat History',
+      desc: 'Erase all local sessions',
+      icon: 'delete-sweep',
+      color: COLORS.secondary,
+      tint: COLORS.secondaryTint,
+      onPress: () =>
+        Alert.alert('Clear chat history?', 'This permanently erases local sessions.', [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Clear', style: 'destructive' },
+        ]),
+    },
+    { title: 'About Guardian Angel', desc: 'Version 0.1.0 · Prototype', icon: 'info', color: COLORS.onSurfaceVariant, tint: COLORS.surfaceLow },
+  ];
+
+  return (
+    <SafeAreaView style={styles.safe} edges={['top']}>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <Text style={styles.h1}>Profile</Text>
+
+        {/* User card */}
+        <BentoCard radius={RADIUS.xxl} style={styles.userCard}>
+          <Mascot size={60} />
+          <View style={{ marginLeft: 16 }}>
+            <Text style={styles.userName}>Sarah Johnson</Text>
+            <Text style={styles.userMeta}>Member since June 2024</Text>
+          </View>
+        </BentoCard>
+
+        <Text style={styles.sectionLabel}>SETTINGS</Text>
+        <View style={{ gap: 12 }}>{settings.map((i) => <Row key={i.title} item={i} />)}</View>
+
+        <Text style={styles.sectionLabel}>DATA MANAGEMENT</Text>
+        <View style={{ gap: 12 }}>{data.map((i) => <Row key={i.title} item={i} />)}</View>
+
+        <BentoCard
+          style={styles.logout}
+          onPress={() => router.replace('/')}
+        >
+          <Text style={styles.logoutText}>Log Out</Text>
+        </BentoCard>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: COLORS.background },
+  scroll: { paddingHorizontal: SPACING.page, paddingTop: 12, paddingBottom: 28, gap: 14 },
+  h1: { ...TYPE.headlineXl, color: COLORS.onSurface },
+
+  userCard: { flexDirection: 'row', alignItems: 'center', padding: 16 },
+  userName: { ...TYPE.headlineMd, color: COLORS.onSurface },
+  userMeta: { ...TYPE.labelSm, color: COLORS.onSurfaceVariant, marginTop: 2 },
+
+  sectionLabel: { ...TYPE.labelSm, color: COLORS.onSurfaceVariant, marginTop: 6, marginBottom: -2, marginLeft: 4 },
+  row: { flexDirection: 'row', alignItems: 'center' },
+  rowTitle: { ...TYPE.titleSm, color: COLORS.onSurface },
+  rowDesc: { ...TYPE.labelSm, color: COLORS.onSurfaceVariant, marginTop: 2 },
+
+  logout: { alignItems: 'center', backgroundColor: COLORS.primaryTint, borderColor: 'rgba(181,35,48,0.2)', marginTop: 8 },
+  logoutText: { ...TYPE.titleSm, color: COLORS.primary },
+});

@@ -1,135 +1,67 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { THEME } from '../constants/theme';
+import { MaterialIcons } from '@expo/vector-icons';
+import BentoCard from '../components/BentoCard';
+import { IconChip } from '../components/Icon';
+import { COLORS, TYPE, SPACING, RADIUS } from '../constants/theme';
 
-type CheckInOption = {
-  id: string;
-  label: string;
-  description: string;
-  emoji: string;
-  nextAction: () => void;
-};
+type IconName = React.ComponentProps<typeof MaterialIcons>['name'];
 
 export default function CheckInScreen() {
   const router = useRouter();
 
-  const checkInOptions: CheckInOption[] = [
-    {
-      id: 'fine',
-      label: "I'm fine",
-      description: 'Close the alert and continue your day',
-      emoji: '✓',
-      nextAction: () => {
-        router.back();
-      }
-    },
-    {
-      id: 'exercising',
-      label: "I'm exercising",
-      description: 'Heart rate changes explained by activity',
-      emoji: '🏃',
-      nextAction: () => {
-        router.back();
-      }
-    },
-    {
-      id: 'stressed',
-      label: 'I feel stressed',
-      description: 'Get support with grounding exercises',
-      emoji: '😰',
-      nextAction: () => {
-        router.replace('/(tabs)/support');
-      }
-    },
-    {
-      id: 'cravings',
-      label: "I'm experiencing cravings",
-      description: 'Access recovery support resources',
-      emoji: '🆘',
-      nextAction: () => {
-        router.replace('/(tabs)/support');
-      }
-    },
-    {
-      id: 'help',
-      label: 'I need help',
-      description: 'Connect with a trusted person or emergency services',
-      emoji: '🚨',
-      nextAction: () => {
-        router.replace('/(tabs)/chat');
-      }
-    }
+  const options: { id: string; label: string; desc: string; icon: IconName; color: string; tint: string; action: () => void }[] = [
+    { id: 'fine', label: "I'm fine", desc: 'Close the check-in and carry on', icon: 'check-circle', color: COLORS.tertiary, tint: COLORS.tertiaryTint, action: () => router.back() },
+    { id: 'exercising', label: "I'm exercising", desc: 'Signals explained by activity', icon: 'directions-run', color: COLORS.secondary, tint: COLORS.secondaryTint, action: () => router.back() },
+    { id: 'stressed', label: 'I feel stressed', desc: 'Try a grounding exercise', icon: 'self-improvement', color: COLORS.warning, tint: COLORS.warningTint, action: () => router.replace('/(tabs)/support') },
+    { id: 'cravings', label: "I'm having cravings", desc: 'Open recovery support', icon: 'healing', color: COLORS.primaryContainer, tint: COLORS.primaryTint, action: () => router.replace('/(tabs)/support') },
+    { id: 'help', label: 'I need help', desc: 'Reach a trusted person or SOS', icon: 'sos', color: COLORS.primary, tint: COLORS.primaryTint, action: () => router.replace('/(tabs)/chat') },
   ];
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#f7f9fc' }}>
-      <View style={{ paddingHorizontal: 20, paddingVertical: 40 }}>
-        <Text style={{ fontSize: 28, fontWeight: '700', color: '#191c1e', marginBottom: 12 }}>
-          Wellbeing Check-In
-        </Text>
-        <Text style={{ fontSize: 16, color: '#5a403f', marginBottom: 40 }}>
-          Your body signals have changed. Are you okay?
-        </Text>
+    <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <Text style={styles.h1}>Wellbeing Check-In</Text>
+        <Text style={styles.sub}>Your body signals have changed. Are you okay?</Text>
 
-        {/* Alert Badge */}
-        <View style={{
-          backgroundColor: '#fff3e0',
-          paddingVertical: 16,
-          paddingHorizontal: 16,
-          borderRadius: 16,
-          marginBottom: 30,
-          borderLeftWidth: 4,
-          borderLeftColor: '#ff9800'
-        }}>
-          <Text style={{ fontSize: 14, color: '#e65100', fontWeight: '500' }}>
-            ⚠️ We noticed an unusual pattern in your wellbeing signals
-          </Text>
+        <View style={styles.alert}>
+          <MaterialIcons name="favorite" size={18} color={COLORS.warning} />
+          <Text style={styles.alertText}>We noticed an unusual pattern in your wellbeing signals.</Text>
         </View>
 
-        {/* Check-In Options */}
-        {checkInOptions.map((option) => (
-          <TouchableOpacity
-            key={option.id}
-            onPress={option.nextAction}
-            style={{
-              backgroundColor: '#fff',
-              paddingVertical: 16,
-              paddingHorizontal: 16,
-              borderRadius: 16,
-              marginBottom: 12,
-              borderWidth: 1,
-              borderColor: '#e0e3e6'
-            }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-              <Text style={{ fontSize: 28, marginRight: 16 }}>{option.emoji}</Text>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: '700', color: '#191c1e', marginBottom: 4 }}>
-                  {option.label}
-                </Text>
-                <Text style={{ fontSize: 14, color: '#5a403f' }}>
-                  {option.description}
-                </Text>
+        <View style={{ gap: 12, marginTop: 6 }}>
+          {options.map((o) => (
+            <BentoCard key={o.id} style={styles.row} onPress={o.action}>
+              <IconChip name={o.icon} color={o.color} tint={o.tint} />
+              <View style={{ flex: 1, marginLeft: 14 }}>
+                <Text style={styles.rowTitle}>{o.label}</Text>
+                <Text style={styles.rowDesc}>{o.desc}</Text>
               </View>
-            </View>
-          </TouchableOpacity>
-        ))}
-
-        {/* Disclaimer */}
-        <View style={{
-          backgroundColor: '#f0f8ff',
-          paddingVertical: 12,
-          paddingHorizontal: 16,
-          borderRadius: 12,
-          marginTop: 30,
-          borderWidth: 1,
-          borderColor: '#b3d9ff'
-        }}>
-          <Text style={{ fontSize: 11, color: '#003e73', lineHeight: 16 }}>
-            ℹ️ This check-in is part of your wellbeing support. Your responses help personalize your experience but are not stored.
-          </Text>
+              <MaterialIcons name="arrow-forward-ios" size={15} color={COLORS.outline} />
+            </BentoCard>
+          ))}
         </View>
-      </View>
-    </ScrollView>
+
+        <View style={styles.note}>
+          <MaterialIcons name="info" size={15} color={COLORS.secondary} />
+          <Text style={styles.noteText}>Your responses personalise your experience but are not stored.</Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: COLORS.background },
+  scroll: { paddingHorizontal: SPACING.page, paddingTop: 20, paddingBottom: 28, gap: 6 },
+  h1: { ...TYPE.headlineXl, color: COLORS.onSurface },
+  sub: { ...TYPE.bodyLg, color: COLORS.onSurfaceVariant, marginTop: 4 },
+  alert: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: COLORS.warningTint, padding: 14, borderRadius: RADIUS.md, borderLeftWidth: 4, borderLeftColor: COLORS.warning, marginTop: 14 },
+  alertText: { ...TYPE.labelMd, color: '#8a4b00', flex: 1 },
+  row: { flexDirection: 'row', alignItems: 'center' },
+  rowTitle: { ...TYPE.titleSm, color: COLORS.onSurface },
+  rowDesc: { ...TYPE.labelSm, color: COLORS.onSurfaceVariant, marginTop: 2 },
+  note: { flexDirection: 'row', gap: 8, backgroundColor: COLORS.secondaryTint, padding: 12, borderRadius: RADIUS.md, marginTop: 12 },
+  noteText: { ...TYPE.labelSm, color: COLORS.onSecondaryContainer, flex: 1 },
+});

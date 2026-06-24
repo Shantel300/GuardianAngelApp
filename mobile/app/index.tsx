@@ -1,27 +1,66 @@
-import { View, Text } from 'react-native';
-import { Link } from 'expo-router';
+import { View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import Mascot from '../components/Mascot';
+import PrimaryButton from '../components/PrimaryButton';
+import { COLORS, TYPE, SPACING } from '../constants/theme';
 
-export default function SplashScreen() {
+export default function WelcomeScreen() {
+  const router = useRouter();
+
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f7f9fc' }}>
-      <Text style={{ fontSize: 32, fontWeight: '700', color: '#b52330', marginBottom: 20 }}>
-        Guardian Angel
-      </Text>
-      <Text style={{ fontSize: 16, color: '#5a403f', marginBottom: 40, textAlign: 'center', paddingHorizontal: 20 }}>
-        Private support when you need it
-      </Text>
+    <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
+      <View style={styles.content}>
+        {/* Brand */}
+        <View style={styles.brand}>
+          <Mascot size={40} rounded={false} />
+          <Text style={styles.brandName}>Guardian Angel</Text>
+        </View>
 
-      <Link href="/onboarding" asChild>
-        <Text style={{ fontSize: 16, color: '#ff5a5f', fontWeight: '600', marginTop: 20 }}>
-          Get Started
-        </Text>
-      </Link>
+        {/* Hero mascot */}
+        <View style={styles.hero}>
+          <Mascot size={180} />
+        </View>
 
-      <Link href="/auth/login" asChild>
-        <Text style={{ fontSize: 14, color: '#0060ac', marginTop: 30 }}>
-          I already have an account
-        </Text>
-      </Link>
-    </View>
+        {/* Headline */}
+        <View style={styles.copy}>
+          <Text style={styles.h1}>You're never alone.</Text>
+          <Text style={styles.h1Accent}>We've got your back!</Text>
+          <Text style={styles.sub}>
+            Your private companion for early support, wellbeing check-ins, and community care.
+          </Text>
+        </View>
+
+        {/* Actions */}
+        <View style={styles.actions}>
+          <PrimaryButton label="Get Started" icon="arrow-forward" onPress={() => router.push('/onboarding')} />
+          <Text style={styles.secondary} onPress={() => router.push('/consent')}>
+            I already have an account
+          </Text>
+          <View style={styles.dots}>
+            <View style={[styles.dot, styles.dotActive]} />
+            <View style={styles.dot} />
+            <View style={styles.dot} />
+          </View>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: COLORS.background },
+  content: { flex: 1, paddingHorizontal: SPACING.page, alignItems: 'center' },
+  brand: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 12 },
+  brandName: { ...TYPE.headlineMd, color: COLORS.primary },
+  hero: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  copy: { alignItems: 'center', marginBottom: 32 },
+  h1: { ...TYPE.headlineXl, color: COLORS.onSurface, textAlign: 'center' },
+  h1Accent: { ...TYPE.headlineXl, color: COLORS.primary, textAlign: 'center' },
+  sub: { ...TYPE.bodyMd, color: COLORS.onSurfaceVariant, textAlign: 'center', marginTop: 14, paddingHorizontal: 12 },
+  actions: { width: '100%', alignItems: 'center' },
+  secondary: { ...TYPE.labelMd, color: COLORS.secondary, marginTop: 20 },
+  dots: { flexDirection: 'row', gap: 8, marginTop: 24 },
+  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.outlineVariant },
+  dotActive: { backgroundColor: COLORS.primary, width: 22 },
+});

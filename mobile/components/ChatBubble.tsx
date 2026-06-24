@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { THEME } from '../constants/theme';
+import { COLORS, RADIUS, TYPE } from '../constants/theme';
 
 type Props = {
   message: string;
@@ -8,63 +8,33 @@ type Props = {
 
 export default function ChatBubble({ message, isUser }: Props) {
   return (
-    <View
-      style={[
-        styles.container,
-        isUser && styles.userContainer,
-      ]}
-    >
-      <View
-        style={[
-          styles.bubble,
-          isUser && styles.userBubble,
-          !isUser && styles.assistantBubble,
-        ]}
-      >
-        <Text
-          style={[
-            styles.text,
-            isUser && styles.userText,
-            !isUser && styles.assistantText,
-          ]}
-        >
-          {message}
-        </Text>
+    <View style={[styles.row, isUser && styles.rowUser]}>
+      <View style={[styles.bubble, isUser ? styles.user : styles.assistant]}>
+        <Text style={[TYPE.bodyMd, isUser ? styles.userText : styles.assistantText]}>{message}</Text>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 12,
-    alignItems: 'flex-start',
-  },
-  userContainer: {
-    alignItems: 'flex-end',
-  },
+  row: { marginBottom: 12, alignItems: 'flex-start' },
+  rowUser: { alignItems: 'flex-end' },
   bubble: {
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: THEME.borderRadius.lg,
-    maxWidth: '80%',
+    borderRadius: RADIUS.xl,
+    maxWidth: '82%',
   },
-  userBubble: {
-    backgroundColor: THEME.colors.primary,
+  user: {
+    backgroundColor: COLORS.primaryContainer,
+    borderBottomRightRadius: RADIUS.sm,
   },
-  assistantBubble: {
-    backgroundColor: '#fff',
+  assistant: {
+    backgroundColor: COLORS.surfaceLowest,
     borderWidth: 1,
-    borderColor: THEME.colors.outline,
+    borderColor: 'rgba(226,190,188,0.4)',
+    borderBottomLeftRadius: RADIUS.sm,
   },
-  text: {
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  userText: {
-    color: THEME.colors.onPrimary,
-  },
-  assistantText: {
-    color: THEME.colors.onSurface,
-  },
+  userText: { color: COLORS.onPrimary },
+  assistantText: { color: COLORS.onSurface },
 });

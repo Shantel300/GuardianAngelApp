@@ -1,144 +1,79 @@
-import { View, Text, ScrollView, Switch } from 'react-native';
 import { useState } from 'react';
-import { Link } from 'expo-router';
+import { View, Text, ScrollView, Switch, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { MaterialIcons } from '@expo/vector-icons';
+import BentoCard from '../components/BentoCard';
+import PrimaryButton from '../components/PrimaryButton';
+import { COLORS, TYPE, SPACING, RADIUS } from '../constants/theme';
+
+type Toggle = { key: string; title: string; desc: string };
+
+const TOGGLES: Toggle[] = [
+  { key: 'chatbot', title: 'Private Chatbot', desc: 'Analyse my messages for wellbeing signals. Conversations are not saved.' },
+  { key: 'monitoring', title: 'Simulated Monitoring', desc: 'Track simulated heart rate, activity and sleep patterns.' },
+  { key: 'alerts', title: 'Trusted-Contact Alerts', desc: 'Send limited alerts if unusual patterns are detected.' },
+  { key: 'referral', title: 'Referral Sharing', desc: 'Share pseudonymous data with counsellors (you approve each share).' },
+];
 
 export default function ConsentScreen() {
-  const [chatbotConsent, setChatbotConsent] = useState(true);
-  const [monitoringConsent, setMonitoringConsent] = useState(false);
-  const [alertsConsent, setAlertsConsent] = useState(false);
-  const [referralConsent, setReferralConsent] = useState(false);
+  const router = useRouter();
+  const [state, setState] = useState<Record<string, boolean>>({
+    chatbot: true,
+    monitoring: false,
+    alerts: false,
+    referral: false,
+  });
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#f7f9fc' }}>
-      <View style={{ paddingHorizontal: 20, paddingVertical: 40 }}>
-        <Text style={{ fontSize: 24, fontWeight: '700', color: '#191c1e', marginBottom: 10 }}>
-          Privacy & Consent
-        </Text>
-        <Text style={{ fontSize: 14, color: '#5a403f', marginBottom: 30 }}>
-          Guardian Angel respects your privacy. You control what is shared.
-        </Text>
+    <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <Text style={styles.h1}>Privacy & Consent</Text>
+        <Text style={styles.sub}>Guardian Angel respects your privacy. You control what is shared.</Text>
 
-        {/* Chatbot Processing */}
-        <View style={{
-          backgroundColor: '#fff',
-          padding: 16,
-          borderRadius: 16,
-          marginBottom: 16,
-          borderWidth: 1,
-          borderColor: '#e0e3e6'
-        }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-            <Text style={{ fontSize: 16, fontWeight: '600', color: '#191c1e', flex: 1 }}>
-              Private Chatbot
-            </Text>
-            <Switch value={chatbotConsent} onValueChange={setChatbotConsent} />
-          </View>
-          <Text style={{ fontSize: 14, color: '#5a403f' }}>
-            Analyze my messages for wellbeing signals. Conversations are not saved.
-          </Text>
+        <View style={{ gap: 14, marginTop: 8 }}>
+          {TOGGLES.map((t) => (
+            <BentoCard key={t.key} style={styles.card}>
+              <View style={styles.cardHead}>
+                <Text style={styles.cardTitle}>{t.title}</Text>
+                <Switch
+                  value={state[t.key]}
+                  onValueChange={(v) => setState((s) => ({ ...s, [t.key]: v }))}
+                  trackColor={{ false: COLORS.surfaceHigh, true: COLORS.primaryContainer }}
+                  thumbColor={COLORS.surfaceLowest}
+                />
+              </View>
+              <Text style={styles.cardDesc}>{t.desc}</Text>
+            </BentoCard>
+          ))}
         </View>
 
-        {/* Wearable Monitoring */}
-        <View style={{
-          backgroundColor: '#fff',
-          padding: 16,
-          borderRadius: 16,
-          marginBottom: 16,
-          borderWidth: 1,
-          borderColor: '#e0e3e6'
-        }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-            <Text style={{ fontSize: 16, fontWeight: '600', color: '#191c1e', flex: 1 }}>
-              Simulated Monitoring
-            </Text>
-            <Switch value={monitoringConsent} onValueChange={setMonitoringConsent} />
-          </View>
-          <Text style={{ fontSize: 14, color: '#5a403f' }}>
-            Track simulated heart rate, activity, and sleep patterns.
-          </Text>
+        <View style={styles.notice}>
+          <MaterialIcons name="info" size={16} color={COLORS.primary} />
+          <Text style={styles.noticeText}>Essential consent: enable Private Chatbot to continue.</Text>
         </View>
 
-        {/* Trust Contact Alerts */}
-        <View style={{
-          backgroundColor: '#fff',
-          padding: 16,
-          borderRadius: 16,
-          marginBottom: 16,
-          borderWidth: 1,
-          borderColor: '#e0e3e6'
-        }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-            <Text style={{ fontSize: 16, fontWeight: '600', color: '#191c1e', flex: 1 }}>
-              Trusted Contact Alerts
-            </Text>
-            <Switch value={alertsConsent} onValueChange={setAlertsConsent} />
-          </View>
-          <Text style={{ fontSize: 14, color: '#5a403f' }}>
-            Send limited alerts to your trusted contacts if unusual patterns are detected.
-          </Text>
-        </View>
-
-        {/* Referral Sharing */}
-        <View style={{
-          backgroundColor: '#fff',
-          padding: 16,
-          borderRadius: 16,
-          marginBottom: 30,
-          borderWidth: 1,
-          borderColor: '#e0e3e6'
-        }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-            <Text style={{ fontSize: 16, fontWeight: '600', color: '#191c1e', flex: 1 }}>
-              Referral Sharing
-            </Text>
-            <Switch value={referralConsent} onValueChange={setReferralConsent} />
-          </View>
-          <Text style={{ fontSize: 14, color: '#5a403f' }}>
-            Share pseudonymous data with counselor services (you approve each share).
-          </Text>
-        </View>
-
-        <View style={{
-          backgroundColor: '#fff3f3',
-          padding: 16,
-          borderRadius: 16,
-          marginBottom: 30,
-          borderWidth: 1,
-          borderColor: '#ffb3b0'
-        }}>
-          <Text style={{ fontSize: 12, color: '#61000e', fontWeight: '500' }}>
-            ⚠️ Essential consent required: You must enable Private Chatbot to continue.
-          </Text>
-        </View>
-
-        {chatbotConsent && (
-          <Link href="/(tabs)" asChild>
-            <View style={{
-              backgroundColor: '#ff5a5f',
-              paddingVertical: 16,
-              borderRadius: 50,
-              alignItems: 'center'
-            }}>
-              <Text style={{ fontSize: 16, fontWeight: '600', color: '#fff' }}>
-                Get Started
-              </Text>
-            </View>
-          </Link>
-        )}
-
-        {!chatbotConsent && (
-          <View style={{
-            backgroundColor: '#d8dadd',
-            paddingVertical: 16,
-            borderRadius: 50,
-            alignItems: 'center'
-          }}>
-            <Text style={{ fontSize: 16, fontWeight: '600', color: '#5a403f' }}>
-              Get Started
-            </Text>
-          </View>
-        )}
-      </View>
-    </ScrollView>
+        <PrimaryButton
+          label="Get Started"
+          icon="arrow-forward"
+          disabled={!state.chatbot}
+          onPress={() => router.replace('/(tabs)/home')}
+          style={{ marginTop: 8 }}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: COLORS.background },
+  scroll: { paddingHorizontal: SPACING.page, paddingTop: 16, paddingBottom: 24, gap: 6 },
+  h1: { ...TYPE.headlineXl, color: COLORS.onSurface },
+  sub: { ...TYPE.bodyMd, color: COLORS.onSurfaceVariant, marginTop: 4 },
+  card: {},
+  cardHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
+  cardTitle: { ...TYPE.titleSm, color: COLORS.onSurface, flex: 1 },
+  cardDesc: { ...TYPE.bodyMd, color: COLORS.onSurfaceVariant },
+  notice: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: COLORS.primaryTint, padding: 14, borderRadius: RADIUS.md, marginTop: 10 },
+  noticeText: { ...TYPE.labelMd, color: COLORS.primary, flex: 1 },
+});

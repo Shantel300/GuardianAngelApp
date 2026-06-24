@@ -1,86 +1,61 @@
-import { View, Text, ScrollView } from 'react-native';
-import { Link } from 'expo-router';
+import { View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { MaterialIcons } from '@expo/vector-icons';
+import BentoCard from '../components/BentoCard';
+import { IconChip } from '../components/Icon';
+import PrimaryButton from '../components/PrimaryButton';
+import Mascot from '../components/Mascot';
+import { COLORS, TYPE, SPACING } from '../constants/theme';
 
 export default function OnboardingScreen() {
+  const router = useRouter();
+
+  const features = [
+    { icon: 'lock' as const, color: COLORS.secondary, tint: COLORS.secondaryTint, title: 'Private by design', desc: 'Conversations are never saved or shared without your consent.' },
+    { icon: 'auto-awesome' as const, color: COLORS.tertiary, tint: COLORS.tertiaryTint, title: 'AI-assisted support', desc: 'Smart, gentle signals that point you to the right resources.' },
+    { icon: 'favorite' as const, color: COLORS.primaryContainer, tint: COLORS.primaryTint, title: 'Always with you', desc: 'Optional wellbeing monitoring and trusted-contact alerts.' },
+  ];
+
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#f7f9fc' }}>
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 40 }}>
-        <Text style={{ fontSize: 24, fontWeight: '700', color: '#191c1e', marginBottom: 20 }}>
-          Private youth and recovery support
-        </Text>
-        <Text style={{ fontSize: 16, color: '#5a403f', textAlign: 'center', marginBottom: 40 }}>
-          Guardian Angel is your confidential companion for early intervention and wellbeing.
-        </Text>
-
-        <View style={{
-          backgroundColor: '#fff',
-          padding: 20,
-          borderRadius: 16,
-          marginBottom: 20,
-          borderWidth: 1,
-          borderColor: '#e0e3e6'
-        }}>
-          <Text style={{ fontSize: 16, fontWeight: '600', color: '#191c1e', marginBottom: 10 }}>
-            ✅ Private
-          </Text>
-          <Text style={{ fontSize: 14, color: '#5a403f' }}>
-            Your conversations are never saved or shared without your consent.
-          </Text>
-        </View>
-
-        <View style={{
-          backgroundColor: '#fff',
-          padding: 20,
-          borderRadius: 16,
-          marginBottom: 20,
-          borderWidth: 1,
-          borderColor: '#e0e3e6'
-        }}>
-          <Text style={{ fontSize: 16, fontWeight: '600', color: '#191c1e', marginBottom: 10 }}>
-            🤖 AI-Assisted
-          </Text>
-          <Text style={{ fontSize: 14, color: '#5a403f' }}>
-            Smart analysis to identify support signals and recommend resources.
-          </Text>
-        </View>
-
-        <View style={{
-          backgroundColor: '#fff',
-          padding: 20,
-          borderRadius: 16,
-          marginBottom: 40,
-          borderWidth: 1,
-          borderColor: '#e0e3e6'
-        }}>
-          <Text style={{ fontSize: 16, fontWeight: '600', color: '#191c1e', marginBottom: 10 }}>
-            📱 Always With You
-          </Text>
-          <Text style={{ fontSize: 14, color: '#5a403f' }}>
-            Optional wearable monitoring and trusted contact alerts.
-          </Text>
-        </View>
-
-        <Link href="/consent" asChild>
-          <View style={{
-            backgroundColor: '#ff5a5f',
-            paddingVertical: 16,
-            paddingHorizontal: 40,
-            borderRadius: 50,
-            alignSelf: 'center',
-            marginBottom: 20
-          }}>
-            <Text style={{ fontSize: 16, fontWeight: '600', color: '#fff' }}>
-              Next
-            </Text>
+    <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
+      <View style={styles.content}>
+        <View style={styles.heroRow}>
+          <Mascot size={72} />
+          <View style={{ flex: 1 }}>
+            <Text style={styles.h1}>Private youth & recovery support</Text>
           </View>
-        </Link>
+        </View>
 
-        <Link href="/" asChild>
-          <Text style={{ fontSize: 14, color: '#0060ac', fontWeight: '500' }}>
-            Skip for now
-          </Text>
-        </Link>
+        <View style={{ gap: 14, marginTop: 8 }}>
+          {features.map((f) => (
+            <BentoCard key={f.title} style={styles.card}>
+              <IconChip name={f.icon} color={f.color} tint={f.tint} />
+              <View style={{ flex: 1, marginLeft: 14 }}>
+                <Text style={styles.cardTitle}>{f.title}</Text>
+                <Text style={styles.cardDesc}>{f.desc}</Text>
+              </View>
+            </BentoCard>
+          ))}
+        </View>
+
+        <View style={styles.actions}>
+          <PrimaryButton label="Next" icon="arrow-forward" onPress={() => router.push('/consent')} />
+          <Text style={styles.skip} onPress={() => router.push('/consent')}>Skip for now</Text>
+        </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: COLORS.background },
+  content: { flex: 1, paddingHorizontal: SPACING.page, paddingTop: 16 },
+  heroRow: { flexDirection: 'row', alignItems: 'center', gap: 16, marginBottom: 16 },
+  h1: { ...TYPE.headlineLg, color: COLORS.onSurface },
+  card: { flexDirection: 'row', alignItems: 'center' },
+  cardTitle: { ...TYPE.titleSm, color: COLORS.onSurface },
+  cardDesc: { ...TYPE.bodyMd, color: COLORS.onSurfaceVariant, marginTop: 4 },
+  actions: { marginTop: 'auto', alignItems: 'center', gap: 16, paddingBottom: 12 },
+  skip: { ...TYPE.labelMd, color: COLORS.secondary },
+});

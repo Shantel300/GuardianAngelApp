@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import { RiskLevel } from '../services/mockClassifier';
-import { RISK_LEVELS, THEME } from '../constants/theme';
+import { RISK, RADIUS, TYPE } from '../constants/theme';
 
 type Props = {
   level: RiskLevel;
@@ -8,27 +9,15 @@ type Props = {
 };
 
 export default function RiskBadge({ level, size = 'medium' }: Props) {
-  const riskInfo = RISK_LEVELS[level];
-  const sizeStyles = {
-    small: { fontSize: 12, padding: 8 },
-    medium: { fontSize: 16, padding: 12 },
-    large: { fontSize: 20, padding: 16 },
-  };
+  const info = RISK[level];
+  const iconSize = size === 'large' ? 26 : size === 'small' ? 16 : 20;
+  const fontSize = size === 'large' ? 18 : size === 'small' ? 12 : 15;
+  const pad = size === 'large' ? 14 : size === 'small' ? 8 : 11;
 
   return (
-    <View
-      style={[
-        styles.badge,
-        { backgroundColor: riskInfo.backgroundColor },
-        sizeStyles[size],
-      ]}
-    >
-      <Text style={{ fontSize: size === 'large' ? 24 : 16, marginRight: 8 }}>
-        {riskInfo.icon}
-      </Text>
-      <Text style={[styles.text, { color: riskInfo.color, fontSize: sizeStyles[size].fontSize }]}>
-        {riskInfo.label}
-      </Text>
+    <View style={[styles.badge, { backgroundColor: info.tint, paddingVertical: pad, paddingHorizontal: pad + 4 }]}>
+      <MaterialIcons name={info.icon} size={iconSize} color={info.color} style={{ marginRight: 8 }} />
+      <Text style={[TYPE.labelMd, { color: info.color, fontSize }]}>{info.label}</Text>
     </View>
   );
 }
@@ -37,10 +26,7 @@ const styles = StyleSheet.create({
   badge: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: THEME.borderRadius.lg,
-    paddingHorizontal: 12,
-  },
-  text: {
-    fontWeight: '600' as const,
+    alignSelf: 'flex-start',
+    borderRadius: RADIUS.full,
   },
 });
