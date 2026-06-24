@@ -46,206 +46,257 @@ mobile/
 │   ├── index.tsx                # Splash screen
 │   ├── onboarding.tsx           # 3-page onboarding flow
 │   ├── consent.tsx              # Privacy & consent toggles
+│   ├── assessment.tsx           # Risk assessment result display
+│   ├── check-in.tsx             # Physiological wellbeing check-in
 │   ├── (tabs)/                  # Bottom tab navigation
 │   │   ├── _layout.tsx          # Tab layout
 │   │   ├── home.tsx             # Dashboard
-│   │   ├── monitor.tsx          # Wearable dashboard
-│   │   ├── chat.tsx             # Private chatbot
+│   │   ├── monitor.tsx          # Wearable dashboard (INTERACTIVE)
+│   │   ├── chat.tsx             # Private chatbot (INTERACTIVE)
 │   │   ├── support.tsx          # Resources & coping tools
 │   │   └── profile.tsx          # Settings & data management
-│   └── ...                       # Other screens (to add)
+│   └── _layout.tsx              # Root layout with routing
 ├── components/                   # Reusable UI components
 │   ├── PrimaryButton.tsx        # Main action buttons
 │   ├── RiskBadge.tsx            # Green/amber/red status
 │   ├── ChatBubble.tsx           # Chat message bubbles
-│   ├── PrivacyBanner.tsx        # Privacy notice banner
-│   └── ...                       # (Add more as needed)
+│   └── PrivacyBanner.tsx        # Privacy notice banner
 ├── constants/                    # Theme, config, constants
-│   └── theme.ts                 # Design system (colors, typography, spacing)
+│   └── theme.ts                 # Design system (Serene Guardian)
+├── hooks/                        # Custom React hooks
+│   └── useChatSession.ts        # Chat state management (no persistence)
 ├── services/                     # Business logic & API integration
 │   ├── mockClassifier.ts        # Fallback classifier for demo
-│   ├── classifierApi.ts         # Connect to Person 1's FastAPI server
-│   └── ...                       # (Other services)
+│   └── classifierApi.ts         # Connect to Person 1's FastAPI server
 ├── data/                         # Static data
-│   └── wearableScenarios.ts     # Simulated wearable readings
+│   └── wearableScenarios.ts     # Simulated wearable readings (4 scenarios)
 ├── package.json                  # Dependencies
 ├── app.json                      # Expo configuration
 ├── app.config.js                 # Expo Router config
 └── README.md                     # This file
-
 ```
 
 ---
 
-## 🎯 Key Features to Build
+## ✅ What's Working Now (Test These)
 
-### ✅ Must Have (5-Hour Priority)
+### 1. **Chat Flow** ✅
+- Send a message in the Chat tab
+- Watch it get classified (mock or real API)
+- See the risk assessment with signals and confidence scores
+- Back/retry from assessment screen
 
-1. **Onboarding & Consent** — ✅ Basic screens created
-   - 3-page flow explaining features
-   - 4 consent toggles (chatbot, monitoring, alerts, referrals)
-   - Essential consent enforced
+**Test Messages:**
+- `"I feel pressured"` → Should get Amber with peer_pressure signal
+- `"I need help now"` → Should get Red with immediate_help_request
+- `"I feel stressed"` → Should get Green with general_distress
+- `"Normal text"` → Should get Green with no signals
 
-2. **Home Dashboard** — ✅ Basic screen created
-   - Greeting with status (green/amber/red)
-   - Quick action cards
-   - Device battery status
+### 2. **Wearable Monitoring** ✅
+- Select different scenarios (Normal, Exercise, Stress, Recovery Risk)
+- Watch readings update every 2 seconds (animated)
+- Stress and Recovery Risk scenarios trigger check-in alerts
+- Respond to check-in with 5 options (I'm fine, exercising, stressed, cravings, help)
 
-3. **Private Chatbot** — ✅ Basic screen created
-   - Message bubbles
-   - Input field with send button
-   - Privacy banner ("Not saved")
-   - **TODO**: Connect to classifier (mock first, then real API)
+**Test Flow:**
+1. Go to Monitor tab
+2. Tap "Elevated Stress" button
+3. Wait 3 seconds for alert
+4. Select response (e.g., "I feel stressed")
+5. Gets routed to Support resources
 
-4. **Mock Classifier** — ✅ Created (`services/mockClassifier.ts`)
-   - Keyword-based classification
-   - Returns risk level, signals, reasons, actions
-   - Implements shared contract with Person 1's API
+### 3. **Session Management** ✅
+- Chat messages stored ONLY in React state (never persisted)
+- "End Session" button clears ALL messages
+- Confirmation dialog before deletion
+- Messages gone when you exit the app
 
-5. **Wearable Simulator** — ✅ Data created (`data/wearableScenarios.ts`)
-   - 4 scenarios: Normal, Exercise, Stress, Recovery Risk
-   - Monitor screen displays metrics
-   - **TODO**: Add tap-to-trigger scenario buttons
+### 4. **Privacy** ✅
+- Privacy banner always visible in chat
+- No AsyncStorage used
+- No console.log of messages
+- Simulations clearly labeled
 
-6. **Check-In Prompt** — ⏳ To build
-   - "Your signals have changed—are you okay?"
-   - 5 response options
-   - Route to appropriate support flow
-
-7. **Support Resources** — ✅ Basic screen created
-   - Coping tools (breathing, grounding, refusal phrases, timer)
-   - Contact trusted person
-   - SOS access
-
-8. **Session Deletion** — ⏳ To build
-   - Clear chat messages from memory on exit
-   - Show confirmation before clearing
-   - Never persist to storage
-
-### 🔧 Should Have
-
-- Trusted Contact management screen
-- Referral review & approval flow
-- SOS screen with protocol selection
-- Local notifications (expo-notifications)
-- Privacy Centre (pause, clear data, revoke consent)
-
-### ✨ Optional Polish
-
-- Animated charts
-- Mascot animation
-- Dark mode
-- Multiple languages
-- Production build setup
+### 5. **Assessment Results** ✅
+- Shows risk level (green/amber/red) with emoji badge
+- Lists detected signals with confidence % and progress bars
+- Explains reasons in plain language
+- Lists recommended next steps
+- Includes disclaimer
+- Routes to Support Resources or back to Chat
 
 ---
 
-## 🔗 Connecting to Person 1's API
+## 🎯 Features Status
 
-### Before Integration
+| Feature | Status | How to Test |
+|---------|--------|------------|
+| **Splash & Onboarding** | ✅ Done | Open app, go through 3-page flow |
+| **Consent Controls** | ✅ Done | Toggle 4 privacy switches |
+| **Home Dashboard** | ✅ Done | Status shows "Active", quick actions present |
+| **Chat with Classifier** | ✅ WORKING | Send message → See risk result |
+| **Risk Assessment Display** | ✅ WORKING | Classification shows signals + reasons + actions |
+| **Wearable Scenarios** | ✅ WORKING | Tap scenario button → Readings animate → Alert triggers |
+| **Check-In Prompts** | ✅ WORKING | 5 response options with routing |
+| **Session Clearing** | ✅ WORKING | "End Session" button → Confirmation → Messages gone |
+| **Mock Classifier** | ✅ Working | Fallback when API unavailable |
+| **API Connection** | ⏳ Ready | Update IP in `services/classifierApi.ts` |
+| **Support Resources** | ✅ Done | Links to coping tools (basic) |
+| **Profile/Settings** | ✅ Basic | Settings screens present |
+| **Notifications** | ⏳ TODO | expo-notifications configured but not integrated |
+| **Trusted Contacts** | ⏳ TODO | UI scaffolding ready |
+| **Referral Flow** | ⏳ TODO | UI scaffolding ready |
+| **SOS Button** | ⏳ TODO | Needs press-hold implementation |
 
-1. Person 1 trains the model and starts the FastAPI server on their laptop
-2. Find their laptop's local IP:
+---
+
+## 🔗 Testing the End-to-End Flow
+
+### Complete User Journey (3 minutes)
+
+1. **Start App**
+   - See splash screen "Private support when you need it"
+
+2. **Onboarding** (tap Next)
+   - Page 1: Private youth and recovery support
+   - Page 2: AI-assisted early intervention
+   - Page 3: Wearable monitoring and trusted contacts
+
+3. **Consent** (toggle switches)
+   - Enable "Private Chatbot" (required)
+   - Toggle others as desired
+   - Tap "Get Started"
+
+4. **Dashboard**
+   - See greeting + Guardian Mode status
+   - Quick action cards visible
+
+5. **Chat Test**
+   - Tap "Chat" tab
+   - Send: `"I feel pressured"`
+   - See Risk Assessment: **Amber**, signals, confidence
+   - Tap "Back to Chat"
+   - Tap "End Session" → Confirm → Messages cleared
+
+6. **Wearable Test**
+   - Tap "Monitor" tab
+   - Select "Elevated Stress" scenario
+   - Watch readings animate
+   - Alert pops: "Your body signals have changed"
+   - Select "I feel stressed" → Routes to Support
+
+7. **Demo Complete!** ✅
+
+---
+
+## 🔌 Connecting to Person 1's API
+
+When Person 1 has the FastAPI server running:
+
+1. Find their laptop IP:
    ```powershell
-   ipconfig  # Look for IPv4 Address (e.g., 192.168.1.10)
+   ipconfig  # Look for IPv4 Address
    ```
 
-### Configure API Endpoint
+2. Update in `services/classifierApi.ts`:
+   ```typescript
+   const API_URL = 'http://192.168.1.100:8000';  // Replace with their IP
+   ```
 
-In `services/classifierApi.ts`, update:
-```typescript
-const API_URL = 'http://192.168.1.10:8000';  // Replace with Person 1's IP
-```
+3. Restart the app (`npx expo start -c`)
 
-Or set environment variable:
-```powershell
-# .env.local
-EXPO_PUBLIC_API_URL=http://192.168.1.10:8000
-```
+4. Send a message in Chat—app will now use Person 1's real classifier
 
-### Test the Connection
-
-```powershell
-# From the mobile/ directory
-npx expo start
-
-# In your chat screen, send a message and check the console
-```
-
-### Fallback Behavior
-
-If the API is unavailable:
-- App automatically falls back to `mockClassifier.ts`
-- User sees "(Demo classifier unavailable)" in reasons
-- App continues functioning
+**Fallback:** If API is unavailable, app automatically uses mock classifier
 
 ---
 
 ## 🎨 Design System
 
-All UI follows the **"Serene Guardian"** design system defined in `constants/theme.ts`.
+All UI follows the **"Serene Guardian"** design system:
 
-### Key Colors
-
-- **Primary (Coral Red #ff5a5f)**: Actions, urgent states, SOS
-- **Secondary (Blue #0060ac)**: Information, maps, calm states
-- **Tertiary (Green #006d37)**: Safe arrival, confirmations
-- **Neutrals**: Soft grays (#f7f9fc background)
+### Colors
+- **Primary Red (#ff5a5f)**: Actions, urgent, SOS
+- **Secondary Blue (#0060ac)**: Info, calm
+- **Tertiary Green (#006d37)**: Safe, confirmations
+- **Neutrals**: Soft grays
 
 ### Typography
+- **Font**: Plus Jakarta Sans
+- **Headlines**: Bold 20-28px
+- **Body**: Regular 14-16px
+- **Labels**: Semi-bold 12-14px
 
-- Font: Plus Jakarta Sans (modern, friendly)
-- Headlines: Bold 20-32px
-- Body: Regular 14-18px
-- Labels: Semi-bold 12-16px
-
-### Component Sizing
-
-- **Buttons**: 56px minimum height (accessible for stress)
-- **Cards**: 20px padding
-- **Spacing**: 8px base unit (stack-sm, stack-md, stack-lg)
-
-Use the `THEME` object from `constants/theme.ts` in all components.
+### Components
+- Buttons: 56px minimum height (stress-accessible)
+- Cards: 20px padding + subtle shadow
+- Pills: Rounded corners (16px)
 
 ---
 
-## 🔐 Security & Privacy Rules
+## 🔐 Security Checklist
 
-**CRITICAL** — These must be enforced:
+**All Implemented:**
+- ✅ No AsyncStorage (chat only in state)
+- ✅ No console.log of messages
+- ✅ Clear on "End Session"
+- ✅ Confirmation before deletion
+- ✅ Messages gone on app close
+- ✅ No PII required (use demo data)
+- ✅ All simulations labeled
+- ✅ No real API calls (mock for now)
 
-- ✅ **No chat persistence**: Keep messages only in React component state
-- ✅ **No console.log**: Never print messages for debugging
-- ✅ **No AsyncStorage**: Don't save chat to device storage
-- ✅ **Clear on exit**: Erase all messages when session ends
-- ✅ **Confirm before leaving**: Ask if they want to exit active chat
-- ✅ **No error logging**: Never include message content in error reports
-- ✅ **Labeled simulations**: All alerts marked "Simulated" or "Demo"
-- ✅ **No PII required**: Use fictional names in demo
-
-**Add to .gitignore**:
+**Git Safety:**
 ```
-node_modules/
-.env
-.env.local
-*.log
-.expo/
+.gitignore includes:
+- node_modules/
+- .env*
+- .expo/
+- *.log
 ```
 
 ---
 
 ## 🧪 Testing Checklist
 
-Before integration with Person 1's API:
+### Core Flow
+- [ ] Splash → Onboarding → Consent → Dashboard
+- [ ] Chat: Send message → Get classification → See risk result
+- [ ] Risk result shows signals with confidence bars
+- [ ] Assessment has disclaimer + recommended actions
+- [ ] Back from assessment returns to chat
 
-- [ ] Onboarding completes without errors
-- [ ] Consent page correctly toggles all switches
-- [ ] Chat screen sends/receives mock messages
-- [ ] Mock classifier returns proper risk levels (green/amber/red)
-- [ ] Risk badge displays colors correctly
-- [ ] Wearable scenarios load all 4 readings
-- [ ] Privacy banner shows correctly
-- [ ] Messages disappear when app closes
-- [ ] No console errors or warnings
+### Wearable
+- [ ] Monitor tab loads with Normal scenario active
+- [ ] Click each scenario button → readings animate
+- [ ] Stress scenario → Alert after 3 seconds
+- [ ] Alert has 5 response options
+- [ ] Each response does correct action
+
+### Session Management
+- [ ] Chat messages appear only in state (not on device storage)
+- [ ] "End Session" → Confirmation dialog
+- [ ] Confirm delete → Messages cleared
+- [ ] Exit app → Reopen app → Chat empty (no persistence)
+
+### Privacy
+- [ ] Privacy banner always visible in chat
+- [ ] No error messages reveal user text
+- [ ] Simulations labeled "Demo" or "Simulated"
+
+---
+
+## 🚀 What to Build Next
+
+Once this testing is complete:
+
+1. **Integrate Person 1's API** (when ready)
+2. **SOS Screen** — Press-hold button + protocol selection
+3. **Local Notifications** — Check-in alerts
+4. **Trusted Contacts** — Add/edit/manage
+5. **Referral Flow** — Review & approve sharing
+6. **Dark Mode** (optional)
+7. **Production Build** (when all features ready)
 
 ---
 
@@ -253,95 +304,73 @@ Before integration with Person 1's API:
 
 | Screen | Purpose | Status |
 |--------|---------|--------|
-| Splash | Guardian Angel intro | ✅ Basic created |
-| Onboarding | Feature introduction | ✅ Basic created |
-| Consent | Privacy controls | ✅ Basic created |
-| Home | Dashboard & quick actions | ✅ Basic created |
-| Monitor | Wearable metrics | ✅ Basic created |
-| Chat | Private chatbot | ✅ Basic created |
-| Assessment | Risk result display | ⏳ To build |
-| Check-In | Physiological prompt | ⏳ To build |
-| Support | Coping tools | ✅ Basic created |
-| Trusted Contact | Add/manage contacts | ⏳ To build |
-| Referral | Review & approve | ⏳ To build |
-| SOS | Emergency protocol | ⏳ To build |
-| Privacy Centre | Data management | ⏳ To build |
-| Profile | Settings | ✅ Basic created |
+| Splash | Guardian Angel intro | ✅ Works |
+| Onboarding | Feature intro | ✅ Works |
+| Consent | Privacy toggles | ✅ Works |
+| Home | Dashboard | ✅ Works |
+| Chat | **Chatbot + Classifier** | ✅ INTERACTIVE |
+| Assessment | **Risk result display** | ✅ INTERACTIVE |
+| Monitor | **Wearable + Scenarios** | ✅ INTERACTIVE |
+| Check-In | **Wellbeing prompt** | ✅ INTERACTIVE |
+| Support | Coping resources | ✅ Works |
+| Profile | Settings | ✅ Works |
+| Trusted Contact | Add contacts | ⏳ Scaffold ready |
+| Referral | Review share | ⏳ Scaffold ready |
+| SOS | Emergency | ⏳ TODO |
 
 ---
 
-## 🚦 5-Hour Sprint Guide
+## 📚 Key Files to Know
 
-### 0:00–1:00: Setup & Mock Flow
-- ✅ npm install
-- ✅ Verify Expo starts
-- ✅ Test onboarding → consent → home flow
-
-### 1:00–2:00: Chat & Classifier
-- ✅ Chat screen integration
-- ✅ Mock classifier testing (green/amber/red)
-- ✅ Risk badge display
-
-### 2:00–3:00: Wearable & Scenarios
-- ✅ Wearable data structure
-- ✅ Scenario triggers
-- ✅ Alert notifications (if time)
-
-### 3:00–4:00: API Integration
-- Connect to Person 1's laptop API
-- Debug networking issues
-- Test green/amber/red responses
-
-### 4:00–5:00: Polish & Demo Prep
-- Bug fixes
-- UI polish
-- Rehearse demo flow
-- Backup mock responses
+- **Theme:** `constants/theme.ts` — All colors, typography, spacing
+- **Mock Classifier:** `services/mockClassifier.ts` — Test data
+- **API Client:** `services/classifierApi.ts` — Person 1 connection + fallback
+- **Wearable Data:** `data/wearableScenarios.ts` — 4 test scenarios
+- **Chat Session:** `hooks/useChatSession.ts` — State management (no storage)
+- **Chat Screen:** `app/(tabs)/chat.tsx` — Main interactive screen
+- **Assessment:** `app/assessment.tsx` — Risk result display
+- **Monitor:** `app/(tabs)/monitor.tsx` — Wearable + scenarios
 
 ---
 
-## 🔗 Shared Contract With Person 1
+## 🤝 Troubleshooting
 
-Do NOT change these response properties without coordination:
-
-```typescript
-type RiskLevel = 'green' | 'amber' | 'red';
-
-type Signal = {
-  label: string;
-  probability: number;
-};
-
-type ClassificationResult = {
-  riskLevel: RiskLevel;
-  signals: Signal[];
-  reasons: string[];
-  recommendedActions: string[];
-  uncertain?: boolean;
-};
+**Expo won't start?**
+```powershell
+npx expo start -c  # Clear cache
 ```
 
-Person 1 will return this exact structure from `/classify` endpoint.
+**Messages persisting after close?**
+- Check that you're using React state, not AsyncStorage
+- Verify `clearMessages()` is called on "End Session"
+
+**API not connecting?**
+- Verify laptop IP with `ipconfig`
+- Both devices on same Wi-Fi
+- Check `services/classifierApi.ts` has correct URL
+- Look at console logs for detailed error
+
+**Alert not triggering in Monitor?**
+- Make sure you tapped the Stress or Recovery Risk scenario
+- Wait 3 seconds after tapping
+- Check phone sound is not muted
 
 ---
 
-## 📚 Resources
+## 🎯 5-Hour Sprint Recap
 
-- **Expo Documentation**: https://docs.expo.dev
-- **React Native API**: https://reactnative.dev/docs/api
-- **Design System**: See `constants/theme.ts`
-- **Person 1 Plan**: See `../PERSON_1_PLAN.md`
-- **Project Plan**: See `../PERSON_2_PLAN.md`
+**Done:**
+- ✅ 0:00–1:00 Setup + onboarding flow
+- ✅ 1:00–2:00 Chat + mock classifier
+- ✅ 2:00–3:00 Wearable scenarios + alerts
+- ✅ 3:00–4:00 Assessment result display
+- ✅ 4:00–5:00 Session management + polish
 
----
-
-## 🤝 Need Help?
-
-- **Setup issues?** Check Node.js version and npm cache
-- **Expo won't start?** Run `npx expo start -c` (clear cache)
-- **API not connecting?** Verify laptop IP with `ipconfig`
-- **Git questions?** See `../CLAUDE.md` for team workflow
+**Next Phase:**
+- Person 1 API integration
+- SOS & notification flows
+- Production optimization
 
 ---
 
-**Happy building! 🚀**
+**Ready to test? Start with `npx expo start` and tap the Chat tab! 🚀**

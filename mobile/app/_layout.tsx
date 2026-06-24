@@ -11,6 +11,8 @@ export default function RootLayout() {
       <Stack.Screen name="onboarding" />
       <Stack.Screen name="consent" />
       <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="assessment" options={{ animationEnabled: true }} />
+      <Stack.Screen name="check-in" options={{ animationEnabled: true }} />
     </Stack>
   );
 }
