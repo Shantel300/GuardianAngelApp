@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { View, Text, ScrollView, Switch, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -6,8 +5,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import BentoCard from '../components/BentoCard';
 import PrimaryButton from '../components/PrimaryButton';
 import { COLORS, TYPE, SPACING, RADIUS } from '../constants/theme';
+import { GuardianConsent, useGuardian } from '../context/GuardianContext';
 
-type Toggle = { key: string; title: string; desc: string };
+type Toggle = { key: keyof GuardianConsent; title: string; desc: string };
 
 const TOGGLES: Toggle[] = [
   {
@@ -22,12 +22,7 @@ const TOGGLES: Toggle[] = [
 
 export default function ConsentScreen() {
   const router = useRouter();
-  const [state, setState] = useState<Record<string, boolean>>({
-    chatbot: true,
-    monitoring: false,
-    alerts: false,
-    referral: false,
-  });
+  const { consent, updateConsent } = useGuardian();
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
@@ -41,8 +36,8 @@ export default function ConsentScreen() {
               <View style={styles.cardHead}>
                 <Text style={styles.cardTitle}>{t.title}</Text>
                 <Switch
-                  value={state[t.key]}
-                  onValueChange={(v) => setState((s) => ({ ...s, [t.key]: v }))}
+                  value={consent[t.key]}
+                  onValueChange={(value) => updateConsent({ [t.key]: value })}
                   trackColor={{ false: COLORS.surfaceHigh, true: COLORS.primaryContainer }}
                   thumbColor={COLORS.surfaceLowest}
                 />
@@ -60,7 +55,7 @@ export default function ConsentScreen() {
         <PrimaryButton
           label="Get Started"
           icon="arrow-forward"
-          disabled={!state.chatbot}
+          disabled={!consent.chatbot}
           onPress={() => router.replace('/(tabs)/home')}
           style={{ marginTop: 8 }}
         />
@@ -71,7 +66,7 @@ export default function ConsentScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: COLORS.background },
-  scroll: { paddingHorizontal: SPACING.page, paddingTop: 16, paddingBottom: 24, gap: 6 },
+  scroll: { width: '100%', maxWidth: 720, alignSelf: 'center', paddingHorizontal: SPACING.page, paddingTop: 16, paddingBottom: 24, gap: 6 },
   h1: { ...TYPE.headlineXl, color: COLORS.onSurface },
   sub: { ...TYPE.bodyMd, color: COLORS.onSurfaceVariant, marginTop: 4 },
   card: {},

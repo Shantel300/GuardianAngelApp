@@ -6,6 +6,7 @@ import BentoCard from '../../components/BentoCard';
 import { IconChip } from '../../components/Icon';
 import Mascot from '../../components/Mascot';
 import { COLORS, TYPE, SPACING, RADIUS } from '../../constants/theme';
+import { useGuardian } from '../../context/GuardianContext';
 
 type IconName = React.ComponentProps<typeof MaterialIcons>['name'];
 
@@ -26,11 +27,12 @@ function Row({ item }: { item: Item }) {
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const { preferences, clearChat, clearSession } = useGuardian();
 
   const settings: Item[] = [
-    { title: 'Preferences', icon: 'tune', color: COLORS.secondary, tint: COLORS.secondaryTint },
-    { title: 'Privacy & Security', icon: 'lock', color: COLORS.tertiary, tint: COLORS.tertiaryTint },
-    { title: 'Notifications', icon: 'notifications', color: COLORS.warning, tint: COLORS.warningTint },
+    { title: 'Preferences', icon: 'tune', color: COLORS.secondary, tint: COLORS.secondaryTint, onPress: () => router.push('/settings/preferences') },
+    { title: 'Privacy & Security', icon: 'lock', color: COLORS.tertiary, tint: COLORS.tertiaryTint, onPress: () => router.push('/settings/privacy') },
+    { title: 'Notifications', icon: 'notifications', color: COLORS.warning, tint: COLORS.warningTint, onPress: () => router.push('/settings/notifications') },
   ];
 
   const data: Item[] = [
@@ -43,10 +45,17 @@ export default function ProfileScreen() {
       onPress: () =>
         Alert.alert('Clear chat history?', 'This permanently erases local sessions.', [
           { text: 'Cancel', style: 'cancel' },
-          { text: 'Clear', style: 'destructive' },
+          {
+            text: 'Clear',
+            style: 'destructive',
+            onPress: () => {
+              clearChat();
+              Alert.alert('Chat cleared', 'The temporary conversation was removed.');
+            },
+          },
         ]),
     },
-    { title: 'About Guardian Angel', desc: 'Version 0.1.0 · Prototype', icon: 'info', color: COLORS.onSurfaceVariant, tint: COLORS.surfaceLow },
+    { title: 'About Guardian Angel', desc: 'Version 0.1.0 · Prototype', icon: 'info', color: COLORS.onSurfaceVariant, tint: COLORS.surfaceLow, onPress: () => router.push('/settings/about') },
   ];
 
   return (
@@ -58,8 +67,8 @@ export default function ProfileScreen() {
         <BentoCard radius={RADIUS.xxl} style={styles.userCard}>
           <Mascot size={60} />
           <View style={{ marginLeft: 16 }}>
-            <Text style={styles.userName}>Sarah Johnson</Text>
-            <Text style={styles.userMeta}>Member since June 2024</Text>
+            <Text style={styles.userName}>{preferences.nickname}</Text>
+            <Text style={styles.userMeta}>Private local profile</Text>
           </View>
         </BentoCard>
 
@@ -71,7 +80,10 @@ export default function ProfileScreen() {
 
         <BentoCard
           style={styles.logout}
-          onPress={() => router.replace('/')}
+          onPress={() => {
+            clearSession();
+            router.replace('/');
+          }}
         >
           <Text style={styles.logoutText}>Log Out</Text>
         </BentoCard>
@@ -82,7 +94,7 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: COLORS.background },
-  scroll: { paddingHorizontal: SPACING.page, paddingTop: 12, paddingBottom: 28, gap: 14 },
+  scroll: { width: '100%', maxWidth: 760, alignSelf: 'center', paddingHorizontal: SPACING.page, paddingTop: 12, paddingBottom: 28, gap: 14 },
   h1: { ...TYPE.headlineXl, color: COLORS.onSurface },
 
   userCard: { flexDirection: 'row', alignItems: 'center', padding: 16 },

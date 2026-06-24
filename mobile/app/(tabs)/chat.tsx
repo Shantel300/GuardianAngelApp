@@ -9,9 +9,10 @@ import {
   Alert,
   StyleSheet,
   KeyboardAvoidingView,
+  Keyboard,
   Platform,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import ChatBubble from '../../components/ChatBubble';
@@ -26,18 +27,22 @@ import {
   sendChatMessage,
 } from '../../services/classifierApi';
 import { COLORS, TYPE, SPACING, RADIUS } from '../../constants/theme';
+import { useGuardian } from '../../context/GuardianContext';
 
-type Message = { id: number; type: 'user' | 'assistant'; text: string };
 type ApiStatus = 'checking' | 'ready' | 'fallback';
 
 const SUGGESTIONS = ['I feel pressured', 'I feel stressed', "I'm having cravings", 'I need support'];
 
 export default function ChatScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const {
+    consent,
+    chatMessages: messages,
+    addChatMessage,
+    clearChat,
+  } = useGuardian();
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState<Message[]>([
-    { id: 0, type: 'assistant', text: "Hi! I'm here to listen. What's on your mind?" },
-  ]);
   const [isLoading, setIsLoading] = useState(false);
   const [apiStatus, setApiStatus] = useState<ApiStatus>('checking');
   const [assessment, setAssessment] =
@@ -60,11 +65,25 @@ export default function ChatScreen() {
     return () => clearTimeout(t);
   }, [messages]);
 
+  useEffect(() => {
+    const subscription = Keyboard.addListener('keyboardDidShow', () => {
+      setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 50);
+    });
+    return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
+    if (messages.length === 1) {
+      setAssessment(null);
+      setReplySource(null);
+    }
+  }, [messages.length]);
+
   const send = async (text: string) => {
     const trimmed = text.trim();
-    if (!trimmed || isLoading) return;
+    if (!trimmed || isLoading || !consent.chatbot) return;
 
-    setMessages((prev) => [...prev, { id: prev.length + 1, type: 'user', text: trimmed }]);
+    addChatMessage('user', trimmed);
     setMessage('');
     setIsLoading(true);
 
@@ -80,18 +99,12 @@ export default function ChatScreen() {
         context,
         apiStatus === 'ready'
       );
-      setMessages((prev) => [
-        ...prev,
-        { id: prev.length + 1, type: 'assistant', text: result.reply },
-      ]);
+      addChatMessage('assistant', result.reply);
       setAssessment(result.assessment);
       setReplySource(result.replySource);
       if (result.replySource === 'mock') setApiStatus('fallback');
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        { id: prev.length + 1, type: 'assistant', text: 'Sorry, I had trouble with that. Please try again.' },
-      ]);
+      addChatMessage('assistant', 'Sorry, I had trouble with that. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -107,9 +120,7 @@ export default function ChatScreen() {
           text: 'Delete & End',
           style: 'destructive',
           onPress: () => {
-            setMessages([{ id: 0, type: 'assistant', text: "Hi! I'm here to listen. What's on your mind?" }]);
-            setAssessment(null);
-            setReplySource(null);
+            clearChat();
             Alert.alert('Session ended', 'All messages have been cleared.');
           },
         },
@@ -162,15 +173,20 @@ export default function ChatScreen() {
       </View>
 
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={8}
+        style={styles.keyboardArea}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? insets.top + 8 : 0}
       >
         <ScrollView
           ref={scrollRef}
           style={{ flex: 1 }}
           contentContainerStyle={styles.messages}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
+          onContentSizeChange={() =>
+            scrollRef.current?.scrollToEnd({ animated: true })
+          }
         >
           {messages.map((m) => (
             <ChatBubble key={m.id} message={m.text} isUser={m.type === 'user'} />
@@ -221,23 +237,40 @@ export default function ChatScreen() {
           </ScrollView>
         )}
 
-        {/* Composer */}
-        <View style={styles.composer}>
+        {!consent.chatbot && (
+          <View style={styles.disabledNotice}>
+            <MaterialIcons name="lock" size={17} color={COLORS.primary} />
+            <Text style={styles.disabledNoticeText}>
+              Private Chatbot consent is disabled.
+            </Text>
+            <Pressable onPress={() => router.push('/settings/privacy')}>
+              <Text style={styles.retryText}>Review</Text>
+            </Pressable>
+          </View>
+        )}
+
+        <View style={[styles.composer, { paddingBottom: Math.max(10, insets.bottom) }]}>
           <View style={styles.inputRow}>
             <TextInput
               style={styles.input}
               placeholder="Type your message…"
               placeholderTextColor={COLORS.outline}
+              selectionColor={COLORS.primaryContainer}
               value={message}
               onChangeText={setMessage}
               multiline
-              editable={!isLoading}
+              editable={!isLoading && consent.chatbot}
+              textAlignVertical="top"
+              blurOnSubmit={false}
+              accessibilityLabel="Private message"
               onSubmitEditing={() => send(message)}
             />
             <Pressable
               onPress={() => send(message)}
-              disabled={!message.trim() || isLoading}
-              style={[styles.sendBtn, (!message.trim() || isLoading) && styles.sendBtnDisabled]}
+              disabled={!message.trim() || isLoading || !consent.chatbot}
+              style={[styles.sendBtn, (!message.trim() || isLoading || !consent.chatbot) && styles.sendBtnDisabled]}
+              accessibilityRole="button"
+              accessibilityLabel="Send message"
             >
               <MaterialIcons name="arrow-upward" size={22} color={COLORS.onPrimary} />
             </Pressable>
@@ -250,6 +283,7 @@ export default function ChatScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: COLORS.background },
+  keyboardArea: { flex: 1 },
   header: {
     paddingHorizontal: SPACING.page,
     paddingVertical: 12,
@@ -292,6 +326,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   retryText: { ...TYPE.labelSm, color: COLORS.secondary },
+  disabledNotice: {
+    marginHorizontal: SPACING.page,
+    marginBottom: 4,
+    minHeight: 44,
+    paddingHorizontal: 12,
+    borderRadius: RADIUS.md,
+    backgroundColor: COLORS.primaryTint,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  disabledNoticeText: { ...TYPE.labelSm, color: COLORS.onSurfaceVariant, flex: 1 },
   assessmentSummary: {
     backgroundColor: COLORS.surfaceLowest,
     borderWidth: 1,
@@ -344,11 +390,19 @@ const styles = StyleSheet.create({
     paddingRight: 6,
     paddingVertical: 6,
   },
-  input: { flex: 1, ...TYPE.bodyMd, color: COLORS.onSurface, maxHeight: 100, paddingVertical: 8 },
+  input: {
+    flex: 1,
+    ...TYPE.bodyMd,
+    color: COLORS.onSurface,
+    backgroundColor: COLORS.surfaceLowest,
+    minHeight: 40,
+    maxHeight: 112,
+    paddingVertical: 8,
+  },
   sendBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: COLORS.primaryContainer,
     alignItems: 'center',
     justifyContent: 'center',

@@ -38,3 +38,12 @@ export async function sendWellbeingNotification(): Promise<void> {
     trigger: null,
   });
 }
+
+export async function getNotificationPermissionStatus(): Promise<
+  'granted' | 'denied' | 'unknown'
+> {
+  const permission = await Notifications.getPermissionsAsync();
+  if (permission.status === 'granted') return 'granted';
+  if (permission.status === 'denied') return 'denied';
+  return 'unknown';
+}

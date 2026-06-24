@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { View, Text, ScrollView, StyleSheet, Animated, Pressable } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Animated, Pressable, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -7,12 +7,14 @@ import Mascot from '../../components/Mascot';
 import BentoCard from '../../components/BentoCard';
 import { IconChip } from '../../components/Icon';
 import { COLORS, TYPE, SPACING, RADIUS, SHADOW } from '../../constants/theme';
+import { useGuardian } from '../../context/GuardianContext';
 
-function PulseDot() {
+function PulseDot({ reducedMotion }: { reducedMotion: boolean }) {
   const scale = useRef(new Animated.Value(1)).current;
   const opacity = useRef(new Animated.Value(0.6)).current;
 
   useEffect(() => {
+    if (reducedMotion) return;
     const loop = Animated.loop(
       Animated.sequence([
         Animated.parallel([
@@ -25,7 +27,7 @@ function PulseDot() {
     );
     loop.start();
     return () => loop.stop();
-  }, [scale, opacity]);
+  }, [scale, opacity, reducedMotion]);
 
   return (
     <View style={styles.dotWrap}>
@@ -47,10 +49,13 @@ type QuickAction = {
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const narrow = width < 360;
+  const { preferences, trustedContacts, monitoringActive } = useGuardian();
 
   const actions: QuickAction[] = [
     { label: 'Talk Privately', sub: 'Chat with Guardian', icon: 'forum', color: COLORS.secondary, tint: COLORS.secondaryTint, route: '/(tabs)/chat' },
-    { label: 'SOS', sub: 'Emergency help', icon: 'emergency', color: COLORS.onPrimary, tint: 'rgba(255,255,255,0.2)', route: '/(tabs)/support', highlight: true },
+    { label: 'SOS', sub: 'Emergency help', icon: 'emergency', color: COLORS.onPrimary, tint: 'rgba(255,255,255,0.2)', route: '/sos', highlight: true },
     { label: 'Start Monitoring', sub: 'Track wellbeing', icon: 'monitor-heart', color: COLORS.tertiary, tint: COLORS.tertiaryTint, route: '/(tabs)/monitor' },
     { label: 'Check In', sub: 'How are you?', icon: 'favorite', color: COLORS.warning, tint: COLORS.warningTint, route: '/check-in' },
   ];
@@ -73,11 +78,13 @@ export default function HomeScreen() {
         <BentoCard radius={RADIUS.xxl} style={styles.greetCard}>
           <View style={styles.greetRow}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.greetHi}>Hi, Sarah! 👋</Text>
+              <Text style={styles.greetHi}>Hi, {preferences.nickname}! 👋</Text>
               <Text style={styles.greetSub}>How are you today?</Text>
               <View style={styles.statusPill}>
-                <PulseDot />
-                <Text style={styles.statusText}>Guardian Mode: Active 24/7</Text>
+                <PulseDot reducedMotion={preferences.reducedMotion} />
+                <Text style={styles.statusText}>
+                  Guardian Mode: {monitoringActive ? 'Monitoring' : 'Ready'}
+                </Text>
               </View>
             </View>
             <View style={styles.shield}>
@@ -94,7 +101,7 @@ export default function HomeScreen() {
               key={a.label}
               radius={RADIUS.xxl}
               onPress={() => router.push(a.route as any)}
-              style={[styles.gridItem, a.highlight && styles.gridItemHighlight] as any}
+              style={[styles.gridItem, narrow && styles.fullWidth, a.highlight && styles.gridItemHighlight] as any}
               padded={false}
             >
               <View style={styles.gridItemInner}>
@@ -108,34 +115,35 @@ export default function HomeScreen() {
           ))}
         </View>
 
-        {/* Companion */}
-        <BentoCard radius={RADIUS.xxl} onPress={() => router.push('/(tabs)/chat')} style={styles.companion}>
-          <Mascot size={84} />
-          <View style={styles.companionBody}>
-            <View style={styles.speech}>
-              <Text style={styles.speechText}>I'm here with you. Tap to talk whenever you need.</Text>
+        {preferences.supportivePrompts && (
+          <BentoCard radius={RADIUS.xxl} onPress={() => router.push('/(tabs)/chat')} style={styles.companion}>
+            <Mascot size={84} />
+            <View style={styles.companionBody}>
+              <View style={styles.speech}>
+                <Text style={styles.speechText}>I'm here with you. Tap to talk whenever you need.</Text>
+              </View>
+              <View style={styles.companionCta}>
+                <Text style={styles.companionCtaText}>Talk to Guardian</Text>
+                <MaterialIcons name="arrow-forward-ios" size={13} color={COLORS.primary} />
+              </View>
             </View>
-            <View style={styles.companionCta}>
-              <Text style={styles.companionCtaText}>Talk to Guardian</Text>
-              <MaterialIcons name="arrow-forward-ios" size={13} color={COLORS.primary} />
-            </View>
-          </View>
-        </BentoCard>
+          </BentoCard>
+        )}
 
         {/* Stats */}
-        <View style={styles.statsRow}>
-          <BentoCard style={styles.statCard}>
+        <View style={[styles.statsRow, narrow && styles.stacked]}>
+          <BentoCard style={[styles.statCard, narrow && styles.fullWidth]}>
             <IconChip name="group" color={COLORS.secondary} tint={COLORS.secondaryTint} containerSize={40} size={20} />
             <View style={{ marginLeft: 12 }}>
               <Text style={styles.statLabel}>Trusted</Text>
-              <Text style={styles.statValue}>3 Active</Text>
+              <Text style={styles.statValue}>{trustedContacts.length} Saved</Text>
             </View>
           </BentoCard>
-          <BentoCard style={styles.statCard}>
+          <BentoCard style={[styles.statCard, narrow && styles.fullWidth]}>
             <IconChip name="battery-full" color={COLORS.tertiary} tint={COLORS.tertiaryTint} containerSize={40} size={20} />
             <View style={{ marginLeft: 12 }}>
               <Text style={styles.statLabel}>Device</Text>
-              <Text style={styles.statValue}>92%</Text>
+              <Text style={styles.statValue}>Demo data</Text>
             </View>
           </BentoCard>
         </View>
@@ -156,7 +164,7 @@ const styles = StyleSheet.create({
   brandRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   brandName: { ...TYPE.headlineMd, color: COLORS.primary },
   iconBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  scroll: { paddingHorizontal: SPACING.page, paddingTop: 8, paddingBottom: 28, gap: 20 },
+  scroll: { width: '100%', maxWidth: 760, alignSelf: 'center', paddingHorizontal: SPACING.page, paddingTop: 8, paddingBottom: 28, gap: 20 },
 
   greetCard: { padding: 22 },
   greetRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
@@ -188,6 +196,7 @@ const styles = StyleSheet.create({
   sectionLabel: { ...TYPE.labelSm, color: COLORS.onSurfaceVariant, marginBottom: -8, marginLeft: 4 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', rowGap: 16 },
   gridItem: { width: '48%' },
+  fullWidth: { width: '100%' },
   gridItemHighlight: { backgroundColor: COLORS.primaryContainer, borderColor: COLORS.primaryContainer },
   gridItemInner: { padding: 18, alignItems: 'flex-start' },
   actionChip: { width: 48, height: 48, borderRadius: RADIUS.lg, alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
@@ -202,6 +211,7 @@ const styles = StyleSheet.create({
   companionCtaText: { ...TYPE.labelMd, color: COLORS.primary },
 
   statsRow: { flexDirection: 'row', gap: 16 },
+  stacked: { flexDirection: 'column' },
   statCard: { flex: 1, flexDirection: 'row', alignItems: 'center' },
   statLabel: { ...TYPE.labelSm, color: COLORS.onSurfaceVariant },
   statValue: { ...TYPE.titleSm, color: COLORS.onSurface },

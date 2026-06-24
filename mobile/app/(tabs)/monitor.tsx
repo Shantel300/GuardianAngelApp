@@ -1,9 +1,10 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { View, Text, ScrollView, Pressable, Alert, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, Pressable, Alert, StyleSheet, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import BentoCard from '../../components/BentoCard';
+import PrimaryButton from '../../components/PrimaryButton';
 import { IconChip } from '../../components/Icon';
 import {
   WEARABLE_SCENARIOS,
@@ -20,11 +21,21 @@ import {
   sendWellbeingNotification,
 } from '../../services/notificationService';
 import { COLORS, TYPE, SPACING, RADIUS } from '../../constants/theme';
+import { useGuardian } from '../../context/GuardianContext';
 
 type IconName = React.ComponentProps<typeof MaterialIcons>['name'];
 
 export default function MonitorScreen() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const narrow = width < 360;
+  const {
+    consent,
+    preferences,
+    updateConsent,
+    setMonitoringActive,
+    setNotificationStatus,
+  } = useGuardian();
   const [scenario, setScenario] = useState(WEARABLE_SCENARIOS[0]);
   const [reading, setReading] = useState(scenario.readings[0]);
   const [animating, setAnimating] = useState(false);
@@ -65,6 +76,23 @@ export default function MonitorScreen() {
   }, [reading, animating, baseline]);
 
   const selectScenario = async (id: string) => {
+    if (!consent.monitoring) {
+      Alert.alert(
+        'Monitoring consent needed',
+        'Enable simulated monitoring to analyse these fictional readings.',
+        [
+          { text: 'Not now', style: 'cancel' },
+          {
+            text: 'Enable',
+            onPress: () => {
+              updateConsent({ monitoring: true });
+              Alert.alert('Monitoring enabled', 'Select the scenario again to begin.');
+            },
+          },
+        ]
+      );
+      return;
+    }
     const s = WEARABLE_SCENARIOS.find((x) => x.id === id);
     if (!s) return;
     setScenario(s);
@@ -76,13 +104,21 @@ export default function MonitorScreen() {
       alertIssued: false,
     };
     setAnalysisText('Building a short pattern before deciding whether to check in.');
-    const allowed = await ensureNotificationPermission();
+    const allowed = preferences.wellbeingNotifications
+      ? await ensureNotificationPermission()
+      : false;
     setNotificationsAllowed(allowed);
+    setNotificationStatus(allowed ? 'granted' : 'denied');
+    setMonitoringActive(true);
     setAnimating(true);
   };
 
   const triggerCheckIn = async () => {
-    if (notificationsAllowed !== false) {
+    if (
+      preferences.wellbeingNotifications &&
+      consent.alerts &&
+      notificationsAllowed !== false
+    ) {
       try {
         await sendWellbeingNotification();
         return;
@@ -91,10 +127,22 @@ export default function MonitorScreen() {
       }
     }
     Alert.alert('Wellbeing check-in', 'Your body signals have changed. Are you okay?', [
-      { text: "I'm fine", onPress: () => setAnimating(false) },
-      { text: "I'm exercising", onPress: () => setAnimating(false) },
-      { text: 'I feel stressed', onPress: () => router.push('/(tabs)/support') },
-      { text: 'I need help', onPress: () => router.push('/(tabs)/chat') },
+      {
+        text: "I'm fine",
+        onPress: () => {
+          setAnimating(false);
+          setMonitoringActive(false);
+        },
+      },
+      {
+        text: "I'm exercising",
+        onPress: () => {
+          setAnimating(false);
+          setMonitoringActive(false);
+        },
+      },
+      { text: 'I feel stressed', onPress: () => router.push('/support-tool/grounding') },
+      { text: 'I need help', onPress: () => router.push('/sos') },
     ]);
   };
 
@@ -110,6 +158,15 @@ export default function MonitorScreen() {
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <Text style={styles.h1}>Wellbeing Monitor</Text>
 
+        {!consent.monitoring && (
+          <View style={styles.consentBanner}>
+            <MaterialIcons name="lock" size={17} color={COLORS.primary} />
+            <Text style={styles.consentText}>
+              Simulated monitoring is off. Select a scenario to review and enable it.
+            </Text>
+          </View>
+        )}
+
         {/* Simulation banner */}
         <View style={styles.simBanner}>
           <MaterialIcons name="info" size={16} color={COLORS.warning} />
@@ -119,7 +176,7 @@ export default function MonitorScreen() {
         {/* Metrics grid */}
         <View style={styles.grid}>
           {metrics.map((m) => (
-            <BentoCard key={m.label} radius={RADIUS.xl} style={styles.metricCard}>
+            <BentoCard key={m.label} radius={RADIUS.xl} style={[styles.metricCard, narrow && styles.metricCardNarrow]}>
               <View style={styles.metricTop}>
                 <IconChip name={m.icon} color={m.color} tint={m.tint} containerSize={40} size={20} />
               </View>
@@ -159,6 +216,20 @@ export default function MonitorScreen() {
           })}
         </View>
 
+        <PrimaryButton
+          label={animating ? 'Stop simulation' : 'Start selected scenario'}
+          icon={animating ? 'stop' : 'play-arrow'}
+          variant={animating ? 'secondary' : 'primary'}
+          onPress={() => {
+            if (animating) {
+              setAnimating(false);
+              setMonitoringActive(false);
+            } else {
+              void selectScenario(scenario.id);
+            }
+          }}
+        />
+
         {/* Hint */}
         {animating ? (
           <View style={[styles.hint, { backgroundColor: COLORS.warningTint, borderLeftColor: COLORS.warning }]}>
@@ -180,14 +251,24 @@ export default function MonitorScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: COLORS.background },
-  scroll: { paddingHorizontal: SPACING.page, paddingTop: 12, paddingBottom: 28, gap: 16 },
+  scroll: { width: '100%', maxWidth: 760, alignSelf: 'center', paddingHorizontal: SPACING.page, paddingTop: 12, paddingBottom: 28, gap: 16 },
   h1: { ...TYPE.headlineXl, color: COLORS.onSurface },
 
   simBanner: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: COLORS.warningTint, paddingVertical: 10, paddingHorizontal: 14, borderRadius: RADIUS.md },
   simText: { ...TYPE.labelMd, color: '#8a4b00' },
+  consentBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: COLORS.primaryTint,
+    padding: 12,
+    borderRadius: RADIUS.md,
+  },
+  consentText: { ...TYPE.labelMd, color: COLORS.onSurfaceVariant, flex: 1 },
 
   grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', rowGap: 14 },
   metricCard: { width: '48%' },
+  metricCardNarrow: { width: '100%' },
   metricTop: { marginBottom: 12 },
   metricLabel: { ...TYPE.labelSm, color: COLORS.onSurfaceVariant },
   metricValueRow: { flexDirection: 'row', alignItems: 'baseline', gap: 4, marginTop: 2 },

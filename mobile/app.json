@@ -3,7 +3,7 @@
     "name": "Guardian Angel",
     "slug": "guardian-angel",
     "version": "0.1.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "scheme": "guardian-angel",
     "userInterfaceStyle": "light",
     "splash": {
@@ -18,7 +18,8 @@
       "bundleIdentifier": "com.guardianangel.mobile"
     },
     "android": {
-      "package": "com.guardianangel.mobile"
+      "package": "com.guardianangel.mobile",
+      "softwareKeyboardLayoutMode": "resize"
     },
     "web": {
       "bundler": "metro"
@@ -32,7 +33,8 @@
           "color": "#ff5a5f",
           "defaultChannel": "wellbeing-check-ins"
         }
-      ]
+      ],
+      "expo-secure-store"
     ]
   }
 }

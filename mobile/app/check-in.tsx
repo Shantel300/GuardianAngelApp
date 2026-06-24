@@ -12,11 +12,11 @@ export default function CheckInScreen() {
   const router = useRouter();
 
   const options: { id: string; label: string; desc: string; icon: IconName; color: string; tint: string; action: () => void }[] = [
-    { id: 'fine', label: "I'm fine", desc: 'Close the check-in and carry on', icon: 'check-circle', color: COLORS.tertiary, tint: COLORS.tertiaryTint, action: () => router.back() },
-    { id: 'exercising', label: "I'm exercising", desc: 'Signals explained by activity', icon: 'directions-run', color: COLORS.secondary, tint: COLORS.secondaryTint, action: () => router.back() },
-    { id: 'stressed', label: 'I feel stressed', desc: 'Try a grounding exercise', icon: 'self-improvement', color: COLORS.warning, tint: COLORS.warningTint, action: () => router.replace('/(tabs)/support') },
-    { id: 'cravings', label: "I'm having cravings", desc: 'Open recovery support', icon: 'healing', color: COLORS.primaryContainer, tint: COLORS.primaryTint, action: () => router.replace('/(tabs)/support') },
-    { id: 'help', label: 'I need help', desc: 'Reach a trusted person or SOS', icon: 'sos', color: COLORS.primary, tint: COLORS.primaryTint, action: () => router.replace('/(tabs)/chat') },
+    { id: 'fine', label: "I'm fine", desc: 'Return to wellbeing monitoring', icon: 'check-circle', color: COLORS.tertiary, tint: COLORS.tertiaryTint, action: () => router.replace('/(tabs)/monitor') },
+    { id: 'exercising', label: "I'm exercising", desc: 'Signals explained by activity', icon: 'directions-run', color: COLORS.secondary, tint: COLORS.secondaryTint, action: () => router.replace('/(tabs)/monitor') },
+    { id: 'stressed', label: 'I feel stressed', desc: 'Try a grounding exercise', icon: 'self-improvement', color: COLORS.warning, tint: COLORS.warningTint, action: () => router.replace('/support-tool/grounding') },
+    { id: 'cravings', label: "I'm having cravings", desc: 'Open the craving delay timer', icon: 'healing', color: COLORS.primaryContainer, tint: COLORS.primaryTint, action: () => router.replace('/support-tool/timer') },
+    { id: 'help', label: 'I need help', desc: 'Open immediate support options', icon: 'sos', color: COLORS.primary, tint: COLORS.primaryTint, action: () => router.replace('/sos') },
   ];
 
   return (
@@ -54,7 +54,7 @@ export default function CheckInScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: COLORS.background },
-  scroll: { paddingHorizontal: SPACING.page, paddingTop: 20, paddingBottom: 28, gap: 6 },
+  scroll: { width: '100%', maxWidth: 720, alignSelf: 'center', paddingHorizontal: SPACING.page, paddingTop: 20, paddingBottom: 28, gap: 6 },
   h1: { ...TYPE.headlineXl, color: COLORS.onSurface },
   sub: { ...TYPE.bodyLg, color: COLORS.onSurfaceVariant, marginTop: 4 },
   alert: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: COLORS.warningTint, padding: 14, borderRadius: RADIUS.md, borderLeftWidth: 4, borderLeftColor: COLORS.warning, marginTop: 14 },

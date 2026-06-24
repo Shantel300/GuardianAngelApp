@@ -11,6 +11,7 @@ import {
   PlusJakartaSans_800ExtraBold,
 } from '@expo-google-fonts/plus-jakarta-sans';
 import { COLORS } from '../constants/theme';
+import { GuardianProvider } from '../context/GuardianContext';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -60,18 +61,25 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        contentStyle: { backgroundColor: COLORS.background },
-      }}
-    >
-      <Stack.Screen name="index" />
-      <Stack.Screen name="onboarding" />
-      <Stack.Screen name="consent" />
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="assessment" options={{ presentation: 'card' }} />
-      <Stack.Screen name="check-in" options={{ presentation: 'card' }} />
-    </Stack>
+    <GuardianProvider>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: COLORS.background },
+        }}
+      >
+        <Stack.Screen name="index" />
+        <Stack.Screen name="onboarding" />
+        <Stack.Screen name="consent" />
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="assessment" options={{ presentation: 'card' }} />
+        <Stack.Screen name="check-in" options={{ presentation: 'card' }} />
+        <Stack.Screen name="sos" options={{ presentation: 'card' }} />
+        <Stack.Screen name="trusted-contacts" options={{ presentation: 'card' }} />
+        <Stack.Screen name="referral" options={{ presentation: 'card' }} />
+        <Stack.Screen name="support-tool/[tool]" options={{ presentation: 'card' }} />
+        <Stack.Screen name="settings/[section]" options={{ presentation: 'card' }} />
+      </Stack>
+    </GuardianProvider>
   );
 }

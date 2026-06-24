@@ -1,10 +1,10 @@
-import { View, Pressable, StyleSheet, ViewStyle, GestureResponderEvent } from 'react-native';
+import { View, Pressable, StyleSheet, ViewStyle, GestureResponderEvent, StyleProp } from 'react-native';
 import { COLORS, RADIUS, SHADOW } from '../constants/theme';
 
 type Props = {
   children: React.ReactNode;
   onPress?: (e: GestureResponderEvent) => void;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   padded?: boolean;
   radius?: number;
 };
@@ -22,6 +22,7 @@ export default function BentoCard({ children, onPress, style, padded = true, rad
     return (
       <Pressable
         onPress={onPress}
+        accessibilityRole="button"
         style={({ pressed }) => [...base, pressed && styles.pressed]}
       >
         {children}
