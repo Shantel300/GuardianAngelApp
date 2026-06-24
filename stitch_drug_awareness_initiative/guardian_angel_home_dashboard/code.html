@@ -1,0 +1,303 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>Guardian Angel - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#f7f9fc",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#e2bebc",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#4ae183",
+                        "primary": "#b52330",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#005228",
+                        "tertiary-fixed": "#6bfe9c",
+                        "on-secondary-fixed-variant": "#004883",
+                        "tertiary": "#006d37",
+                        "surface-container-low": "#f2f4f7",
+                        "surface-dim": "#d8dadd",
+                        "primary-fixed-dim": "#ffb3b0",
+                        "secondary-container": "#68abff",
+                        "surface-tint": "#b52330",
+                        "surface-container-highest": "#e0e3e6",
+                        "on-secondary-container": "#003e73",
+                        "surface-container-high": "#e6e8eb",
+                        "primary-container": "#ff5a5f",
+                        "on-primary-fixed-variant": "#92001b",
+                        "surface-variant": "#e0e3e6",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#eceef1",
+                        "primary-fixed": "#ffdad8",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#0060ac",
+                        "on-surface-variant": "#5a403f",
+                        "outline": "#8e706f",
+                        "on-background": "#191c1e",
+                        "secondary-fixed-dim": "#a4c9ff",
+                        "surface": "#f7f9fc",
+                        "tertiary-container": "#00aa59",
+                        "on-primary-container": "#61000e",
+                        "secondary-fixed": "#d4e3ff",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary-fixed": "#001c39",
+                        "on-tertiary-fixed": "#00210c",
+                        "on-tertiary": "#ffffff",
+                        "background": "#f7f9fc",
+                        "inverse-on-surface": "#eff1f4",
+                        "on-tertiary-container": "#003517",
+                        "inverse-primary": "#ffb3b0",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#410007",
+                        "on-surface": "#191c1e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter-grid": "16px",
+                        "container-padding": "20px",
+                        "stack-lg": "24px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "margin-page": "20px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .bento-card {
+            background: #ffffff;
+            border: 1px solid #E1E8F0;
+            box-shadow: 0 4px 15px 0 rgba(0,0,0,0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bento-card:active {
+            transform: scale(0.96);
+        }
+        .pulse-glow {
+            animation: pulse 2s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 90, 95, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 90, 95, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 90, 95, 0); }
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-surface sticky top-0 z-50 flex justify-between items-center w-full px-container-padding h-16 shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-primary-container/10 border-2 border-primary-container flex items-center justify-center">
+<img class="w-full h-full object-cover" data-alt="A friendly and adorable 3D penguin mascot character named Guardian, wearing a small protective heart shield on its chest. The penguin is rendered in a soft, high-quality Pixar-like digital art style with warm lighting, set against a clean white studio background. The penguin has large caring eyes and a welcoming posture, embodying the brand's 'Protective Warmth' identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBam386KXAi5-TMq3hfOr8mIOPVqx-cd9Mnl5X75J4PReUg9SJv3sAgPp3eek09SP5L_8XbwGs4izJC--2LFYp0s4VlNtA7zdwGhMESUz7OJkckrjFKoxoaxA-c3CepNCmqJPPBf0EXKQpui4X-Ev0pia5kXzIXqDDEYgF50UYmS_fzl1tsUmgqRvSmkLpyFIIzIWMusTXifq1ELQk1VvqytBjHTK2DJuF2nhoj1_FdBsM-pCK5MTJbpkhsG376enMVCkzb_nL2JBE">
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">Guardian Angel</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full transition-transform active:scale-95 hover:opacity-80">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</button>
+</header>
+<main class="px-container-padding pt-6 space-y-stack-lg">
+<!-- Hero Greeting Section -->
+<section class="relative overflow-hidden rounded-3xl p-6 bg-white border border-outline-variant/30 shadow-[0_4px_15px_0_rgba(0,0,0,0.06)]">
+<div class="relative z-10 flex justify-between items-start">
+<div class="space-y-1">
+<h2 class="font-headline-xl text-headline-xl text-on-surface">Hi, Sarah! 👋</h2>
+<p class="font-body-md text-on-surface-variant">How are you today?</p>
+<div class="mt-4 inline-flex items-center gap-2 bg-tertiary-container/10 px-4 py-2 rounded-full">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-tertiary"></span>
+</span>
+<p class="font-label-md text-tertiary">Guardian Mode: Active 24/7</p>
+</div>
+</div>
+<div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-primary-container/10">
+<span class="material-symbols-outlined text-primary-container text-4xl" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+</div>
+</section>
+<!-- Quick Actions Bento Grid -->
+<section class="space-y-stack-md">
+<h3 class="font-label-md text-on-surface-variant uppercase tracking-wider px-1">Quick Actions</h3>
+<div class="grid grid-cols-2 gap-4">
+<!-- Start Journey -->
+<button class="bento-card rounded-3xl p-5 flex flex-col items-start gap-4 text-left" onclick="window.location.href='{{DATA:SCREEN:SCREEN_8}}'">
+<div class="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">directions_run</span>
+</div>
+<div>
+<p class="font-headline-lg-mobile text-on-surface text-sm">Start Journey</p>
+<p class="font-label-sm text-on-surface-variant/70">I'm going somewhere</p>
+</div>
+</button>
+<!-- SOS (High Elevation/Primary) -->
+<button class="bento-card rounded-3xl p-5 flex flex-col items-start gap-4 text-left bg-primary-container text-on-primary pulse-glow border-none" onclick="window.location.href='{{DATA:SCREEN:SCREEN_10}}'">
+<div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">emergency</span>
+</div>
+<div>
+<p class="font-headline-lg-mobile text-white text-sm">SOS</p>
+<p class="font-label-sm text-white/80">Emergency help</p>
+</div>
+</button>
+<!-- Safe Arrived -->
+<button class="bento-card rounded-3xl p-5 flex flex-col items-start gap-4 text-left">
+<div class="w-12 h-12 rounded-2xl bg-tertiary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">check_circle</span>
+</div>
+<div>
+<p class="font-headline-lg-mobile text-on-surface text-sm">Safe Arrived</p>
+<p class="font-label-sm text-on-surface-variant/70">I reached my destination</p>
+</div>
+</button>
+<!-- Fake Call -->
+<button class="bento-card rounded-3xl p-5 flex flex-col items-start gap-4 text-left" onclick="window.location.href='{{DATA:SCREEN:SCREEN_14}}'">
+<div class="w-12 h-12 rounded-2xl bg-orange-400/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-orange-500">call</span>
+</div>
+<div>
+<p class="font-headline-lg-mobile text-on-surface text-sm">Fake Call</p>
+<p class="font-label-sm text-on-surface-variant/70">Need an excuse call?</p>
+</div>
+</button>
+</div>
+</section>
+<!-- Safety Companion Section -->
+<section class="bg-white rounded-[32px] p-6 border border-outline-variant/30 flex items-center gap-6 shadow-[0_4px_15px_0_rgba(0,0,0,0.06)] relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 w-32 h-32 bg-primary-container/5 rounded-full blur-2xl"></div>
+<div class="relative w-28 h-28 shrink-0 flex items-center justify-center">
+<img class="w-full h-full object-contain" data-alt="A cute, chubby 3D penguin mascot with soft, white belly feathers and jet-black wings, looking directly at the viewer with a reassuring, cheerful expression. The character is sitting comfortably, and its large, sparkling eyes convey safety and care. Digital illustration style with soft ambient occlusion and vibrant, friendly colors, perfectly matched to a modern safety application's aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBggD7nRXr3GPRUc0vWrQ3YZevZBNLPkMvcMURprj36t1kxVs26wSzxdxSG29E8hWINqd0EwFCB3bm1fSSNbzdOvCo1Uy1PdeXDgvUd8ZiX3pgvX85SiS1EDvQKVNvSYrTawvZPIELwWV4mFlXn1OlL_Cl8IWJ1KFz38h93SmBFChFplaWAKb4V_syKEdGM7R1c8NJ9dM56-gI1ftkRPSQc5rcyCGtEex3J5gVa9KC4l6Xa11L9PvqaUBAmP9QaGt-DMfmv0NogKY4">
+</div>
+<div class="relative space-y-2">
+<div class="bg-surface-container-low p-4 rounded-2xl rounded-bl-none relative">
+<p class="font-body-md text-on-surface-variant leading-tight">I'm here with you! Tap the SOS button if you need help.</p>
+</div>
+<div class="flex items-center gap-2 text-primary font-label-md">
+<span class="">Talk to Guardian</span>
+<span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+</div>
+</div>
+</section>
+<!-- Status & Stats Card -->
+<section class="grid grid-cols-2 gap-4">
+<div class="bg-white p-4 rounded-2xl border border-outline-variant/30 flex items-center gap-3" onclick="window.location.href='{{DATA:SCREEN:SCREEN_12}}'">
+<div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-blue-600 text-sm">person_pin_circle</span>
+</div>
+<div>
+<p class="font-label-sm text-on-surface-variant/70">Trusted</p>
+<p class="font-label-md text-on-surface">5 Active</p>
+</div>
+</div>
+<div class="bg-white p-4 rounded-2xl border border-outline-variant/30 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-green-600 text-sm">battery_full</span>
+</div>
+<div>
+<p class="font-label-sm text-on-surface-variant/70">Device</p>
+<p class="font-label-md text-on-surface">92%</p>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface-container-lowest flex justify-around items-center px-4 py-3 pb-safe shadow-[0_-4px_15px_0_rgba(0,0,0,0.06)] rounded-t-xl">
+<!-- Home (Active) -->
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1.5 transition-all duration-300 active:scale-90">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</button>
+<!-- Map -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors px-5 py-1.5 rounded-full active:scale-90" onclick="window.location.href='{{DATA:SCREEN:SCREEN_5}}'">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-sm text-label-sm">Map</span>
+</button>
+<!-- Alerts -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors px-5 py-1.5 rounded-full active:scale-90" onclick="window.location.href='{{DATA:SCREEN:SCREEN_10}}'">
+<div class="relative">
+<span class="material-symbols-outlined">notifications_active</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+</div>
+<span class="font-label-sm text-label-sm">Alerts</span>
+</button>
+<!-- Profile -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors px-5 py-1.5 rounded-full active:scale-90" onclick="window.location.href='{{DATA:SCREEN:SCREEN_12}}'">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</button>
+</nav>
+<script>
+        // Simple micro-interaction for the SOS button press
+        const sosBtn = document.querySelector('button.bg-primary-container');
+        sosBtn.addEventListener('mousedown', () => {
+            sosBtn.style.transform = 'scale(0.95)';
+        });
+        sosBtn.addEventListener('mouseup', () => {
+            sosBtn.style.transform = 'scale(1)';
+        });
+        sosBtn.addEventListener('mouseleave', () => {
+            sosBtn.style.transform = 'scale(1)';
+        });
+
+        // Toggle Active State simulation
+        const navButtons = document.querySelectorAll('nav button');
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                navButtons.forEach(b => {
+                    b.classList.remove('bg-primary-container', 'text-on-primary-container');
+                    b.classList.add('text-on-surface-variant');
+                    const icon = b.querySelector('.material-symbols-outlined');
+                    if (icon) icon.style.fontVariationSettings = "'FILL' 0";
+                });
+                btn.classList.add('bg-primary-container', 'text-on-primary-container');
+                btn.classList.remove('text-on-surface-variant');
+                const icon = btn.querySelector('.material-symbols-outlined');
+                if (icon) icon.style.fontVariationSettings = "'FILL' 1";
+            });
+        });
+    </script>
+
+
+</body></html>
