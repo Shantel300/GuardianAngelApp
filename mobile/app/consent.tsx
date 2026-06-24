@@ -10,7 +10,11 @@ import { COLORS, TYPE, SPACING, RADIUS } from '../constants/theme';
 type Toggle = { key: string; title: string; desc: string };
 
 const TOGGLES: Toggle[] = [
-  { key: 'chatbot', title: 'Private Chatbot', desc: 'Analyse my messages for wellbeing signals. Conversations are not saved.' },
+  {
+    key: 'chatbot',
+    title: 'Private Chatbot',
+    desc: 'For this prototype, each message is temporarily analysed by the team’s local AI laptop over trusted Wi-Fi. Messages and conversations are not saved.',
+  },
   { key: 'monitoring', title: 'Simulated Monitoring', desc: 'Track simulated heart rate, activity and sleep patterns.' },
   { key: 'alerts', title: 'Trusted-Contact Alerts', desc: 'Send limited alerts if unusual patterns are detected.' },
   { key: 'referral', title: 'Referral Sharing', desc: 'Share pseudonymous data with counsellors (you approve each share).' },

@@ -10,7 +10,7 @@ export type ClassificationResult = {
   signals: Signal[];
   reasons: string[];
   recommendedActions: string[];
-  uncertain?: boolean;
+  uncertain: boolean;
 };
 
 export async function classifyMessage(text: string): Promise<ClassificationResult> {
@@ -41,6 +41,7 @@ export async function classifyMessage(text: string): Promise<ClassificationResul
         'Open the SOS screen',
         'Call emergency services if needed',
       ],
+      uncertain: false,
     };
   }
 
@@ -75,6 +76,7 @@ export async function classifyMessage(text: string): Promise<ClassificationResul
         'Review coping strategies',
         'Contact someone you trust',
       ],
+      uncertain: false,
     };
   }
 
@@ -101,6 +103,7 @@ export async function classifyMessage(text: string): Promise<ClassificationResul
         'Try a grounding exercise',
         'Optional wellbeing check-in',
       ],
+      uncertain: false,
     };
   }
 
@@ -110,5 +113,6 @@ export async function classifyMessage(text: string): Promise<ClassificationResul
     signals: [],
     reasons: ['No immediate support signals identified'],
     recommendedActions: ['Continue using prevention resources'],
+    uncertain: false,
   };
 }

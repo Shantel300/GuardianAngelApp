@@ -140,7 +140,7 @@ mobile/
 | **Check-In Prompts** | ✅ WORKING | 5 response options with routing |
 | **Session Clearing** | ✅ WORKING | "End Session" button → Confirmation → Messages gone |
 | **Mock Classifier** | ✅ Working | Fallback when API unavailable |
-| **API Connection** | ⏳ Ready | Update IP in `services/classifierApi.ts` |
+| **API Connection** | ✅ Integrated | Set `EXPO_PUBLIC_API_URL` in `.env` |
 | **Support Resources** | ✅ Done | Links to coping tools (basic) |
 | **Profile/Settings** | ✅ Basic | Settings screens present |
 | **Notifications** | ⏳ TODO | expo-notifications configured but not integrated |
@@ -193,19 +193,24 @@ mobile/
 
 When Person 1 has the FastAPI server running:
 
-1. Find their laptop IP:
+1. Start the service from `../ai-api`:
+   ```powershell
+   uvicorn app.main:app --host 0.0.0.0 --port 8000 --no-access-log
+   ```
+
+2. Find their laptop IP:
    ```powershell
    ipconfig  # Look for IPv4 Address
    ```
 
-2. Update in `services/classifierApi.ts`:
-   ```typescript
-   const API_URL = 'http://192.168.1.100:8000';  // Replace with their IP
+3. Copy `.env.example` to `.env` and set:
+   ```text
+   EXPO_PUBLIC_API_URL=http://192.168.1.100:8000
    ```
 
-3. Restart the app (`npx expo start -c`)
+4. Restart the app (`npx expo start -c`)
 
-4. Send a message in Chat—app will now use Person 1's real classifier
+5. Open Chat and confirm **Local trained AI connected** appears.
 
 **Fallback:** If API is unavailable, app automatically uses mock classifier
 
@@ -244,7 +249,7 @@ All UI follows the **"Serene Guardian"** design system:
 - ✅ Messages gone on app close
 - ✅ No PII required (use demo data)
 - ✅ All simulations labeled
-- ✅ No real API calls (mock for now)
+- ✅ Real local AI API with a clearly labelled mock fallback
 
 **Git Safety:**
 ```
@@ -347,7 +352,7 @@ npx expo start -c  # Clear cache
 **API not connecting?**
 - Verify laptop IP with `ipconfig`
 - Both devices on same Wi-Fi
-- Check `services/classifierApi.ts` has correct URL
+- Check `.env` has the active AI laptop Wi-Fi URL
 - Look at console logs for detailed error
 
 **Alert not triggering in Monitor?**

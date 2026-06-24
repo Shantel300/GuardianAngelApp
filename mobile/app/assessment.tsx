@@ -5,19 +5,17 @@ import { MaterialIcons } from '@expo/vector-icons';
 import BentoCard from '../components/BentoCard';
 import RiskBadge from '../components/RiskBadge';
 import PrimaryButton from '../components/PrimaryButton';
-import { ClassificationResult } from '../services/mockClassifier';
+import { SourcedClassificationResult } from '../services/classifierApi';
 import { COLORS, TYPE, SPACING, RADIUS } from '../constants/theme';
 
 export default function AssessmentScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
 
-  let result: ClassificationResult | null = null;
-  let userMessage = '';
+  let result: SourcedClassificationResult | null = null;
   try {
     if (params.result) {
       result = JSON.parse(params.result as string);
-      userMessage = (params.userMessage as string) || '';
     }
   } catch {
     result = null;
@@ -37,11 +35,13 @@ export default function AssessmentScreen() {
         <Text style={styles.label}>ASSESSMENT RESULT</Text>
         <RiskBadge level={result.riskLevel} size="large" />
 
-        {!!userMessage && (
-          <BentoCard style={{ marginTop: 4 }}>
-            <Text style={styles.quoteLabel}>You said</Text>
-            <Text style={styles.quote}>"{userMessage}"</Text>
-          </BentoCard>
+        {result.source === 'mock' && (
+          <View style={styles.fallback}>
+            <MaterialIcons name="info-outline" size={16} color={COLORS.warning} />
+            <Text style={styles.fallbackText}>
+              Demo fallback classifier used because the trained AI service was unavailable.
+            </Text>
+          </View>
         )}
 
         {result.signals.length > 0 && (
@@ -113,8 +113,17 @@ const styles = StyleSheet.create({
   scroll: { paddingHorizontal: SPACING.page, paddingTop: 16, paddingBottom: 28, gap: 14 },
   label: { ...TYPE.labelSm, color: COLORS.onSurfaceVariant },
 
-  quoteLabel: { ...TYPE.labelSm, color: COLORS.onSurfaceVariant },
-  quote: { ...TYPE.bodyMd, color: COLORS.onSurface, marginTop: 6 },
+  fallback: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: COLORS.warningTint,
+    padding: 12,
+    borderRadius: RADIUS.md,
+    borderLeftWidth: 4,
+    borderLeftColor: COLORS.warning,
+  },
+  fallbackText: { ...TYPE.labelMd, color: '#8a4b00', flex: 1 },
 
   cardTitle: { ...TYPE.titleSm, color: COLORS.onSurface },
   signalRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },

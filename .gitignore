@@ -1,0 +1,10 @@
+ai-api/.venv/
+ai-api/__pycache__/
+ai-api/**/__pycache__/
+ai-api/.pytest_cache/
+ai-api/.test-tmp/
+ai-api/models/encoder/
+ai-api/models/embeddings.npz
+*.py[cod]
+*.log
+

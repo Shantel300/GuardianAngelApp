@@ -17,10 +17,11 @@ import { MaterialIcons } from '@expo/vector-icons';
 import ChatBubble from '../../components/ChatBubble';
 import PrivacyBanner from '../../components/PrivacyBanner';
 import Mascot from '../../components/Mascot';
-import { classifyMessage } from '../../services/classifierApi';
+import { classifyMessage, healthCheck } from '../../services/classifierApi';
 import { COLORS, TYPE, SPACING, RADIUS } from '../../constants/theme';
 
 type Message = { id: number; type: 'user' | 'assistant'; text: string };
+type ApiStatus = 'checking' | 'ready' | 'fallback';
 
 const SUGGESTIONS = ['I feel pressured', 'I feel stressed', "I'm having cravings", 'I need support'];
 
@@ -31,7 +32,18 @@ export default function ChatScreen() {
     { id: 0, type: 'assistant', text: "Hi! I'm here to listen. What's on your mind?" },
   ]);
   const [isLoading, setIsLoading] = useState(false);
+  const [apiStatus, setApiStatus] = useState<ApiStatus>('checking');
   const scrollRef = useRef<ScrollView>(null);
+
+  const checkConnection = async () => {
+    setApiStatus('checking');
+    const ready = await healthCheck();
+    setApiStatus(ready ? 'ready' : 'fallback');
+  };
+
+  useEffect(() => {
+    void checkConnection();
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 80);
@@ -47,11 +59,11 @@ export default function ChatScreen() {
     setIsLoading(true);
 
     try {
-      const result = await classifyMessage(trimmed);
+      const result = await classifyMessage(trimmed, apiStatus === 'ready');
       setIsLoading(false);
       router.push({
         pathname: '/assessment',
-        params: { result: JSON.stringify(result), userMessage: trimmed },
+        params: { result: JSON.stringify(result) },
       });
     } catch {
       setIsLoading(false);
@@ -97,7 +109,32 @@ export default function ChatScreen() {
         </Pressable>
       </View>
 
-      <PrivacyBanner />
+      <PrivacyBanner message="Chat stays in memory; prototype analysis may use the local AI laptop" />
+
+      <View
+        style={[
+          styles.connection,
+          apiStatus === 'ready' ? styles.connectionReady : styles.connectionFallback,
+        ]}
+      >
+        <MaterialIcons
+          name={apiStatus === 'ready' ? 'verified-user' : 'info-outline'}
+          size={16}
+          color={apiStatus === 'ready' ? COLORS.tertiary : COLORS.warning}
+        />
+        <Text style={styles.connectionText}>
+          {apiStatus === 'checking'
+            ? 'Checking the private AI service...'
+            : apiStatus === 'ready'
+              ? 'Local trained AI connected'
+              : 'Demo fallback classifier active'}
+        </Text>
+        {apiStatus === 'fallback' && (
+          <Pressable onPress={() => void checkConnection()}>
+            <Text style={styles.retryText}>Retry</Text>
+          </Pressable>
+        )}
+      </View>
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -188,6 +225,24 @@ const styles = StyleSheet.create({
   messages: { paddingHorizontal: SPACING.page, paddingTop: 8, paddingBottom: 12 },
   typing: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 6 },
   typingText: { ...TYPE.bodyMd, color: COLORS.onSurfaceVariant },
+  connection: {
+    marginHorizontal: SPACING.page,
+    marginBottom: 8,
+    paddingHorizontal: 12,
+    height: 38,
+    borderRadius: RADIUS.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  connectionReady: { backgroundColor: COLORS.tertiaryTint },
+  connectionFallback: { backgroundColor: COLORS.warningTint },
+  connectionText: {
+    ...TYPE.labelSm,
+    color: COLORS.onSurfaceVariant,
+    flex: 1,
+  },
+  retryText: { ...TYPE.labelSm, color: COLORS.secondary },
 
   suggestions: { paddingHorizontal: SPACING.page, paddingVertical: 10, gap: 8 },
   chip: {

@@ -1,0 +1,14 @@
+{
+  "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+  "embedding_dimension": 384,
+  "hidden_size": 128,
+  "dropout": 0.25,
+  "labels": [
+    "general_distress",
+    "peer_pressure",
+    "substance_exposure",
+    "craving_or_relapse_risk",
+    "immediate_help_request"
+  ],
+  "random_seed": 42
+}

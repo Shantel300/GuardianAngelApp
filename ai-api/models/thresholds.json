@@ -1,0 +1,7 @@
+{
+  "general_distress": 0.55,
+  "peer_pressure": 0.5,
+  "substance_exposure": 0.25,
+  "craving_or_relapse_risk": 0.3,
+  "immediate_help_request": 0.75
+}
