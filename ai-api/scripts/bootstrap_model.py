@@ -1,7 +1,12 @@
 """Download MiniLM locally, or rebuild all model artifacts if needed."""
 
 import argparse
+import sys
 from pathlib import Path
+
+# Allow running as a standalone script (`python scripts/bootstrap_model.py`)
+# by ensuring the ai-api root is importable, mirroring tests/conftest.py.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from sentence_transformers import SentenceTransformer
 
